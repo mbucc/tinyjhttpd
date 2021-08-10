@@ -1,0 +1,56 @@
+This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking jdevgarden (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
+
+
+Server Software:        
+Server Hostname:        jdevgarden
+Server Port:            8000
+
+Document Path:          /myapp0
+Document Length:        27 bytes
+
+Concurrency Level:      5
+Time taken for tests:   4.110 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      122000 bytes
+Total body sent:        3809000
+HTML transferred:       27000 bytes
+Requests per second:    243.29 [#/sec] (mean)
+Time per request:       20.552 [ms] (mean)
+Time per request:       4.110 [ms] (mean, across all concurrent requests)
+Transfer rate:          28.99 [Kbytes/sec] received
+                        904.97 kb/s sent
+                        933.95 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:     9   19   7.7     18     225
+Waiting:        8   19   7.6     18     223
+Total:          9   20   7.7     19     226
+
+Percentage of the requests served within a certain time (ms)
+  50%     19
+  66%     20
+  75%     21
+  80%     22
+  90%     25
+  95%     28
+  98%     31
+  99%     32
+ 100%    226 (longest request)

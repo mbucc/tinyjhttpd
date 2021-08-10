@@ -1,0 +1,35 @@
+August 10, 2021
+At startup, jmustache consumes no more RAM than minimal server.
+
+Both use 22MB of RAM.
+
+
+jmustache running:
+    jdevgarden:~/jmustache$ ./start.sh 
+    jdevgarden:~/jmustache$ starting /myapp0 on port 8000
+    jdevgarden:~/jmustache$ free -m
+                  total        used        free      shared  buff/cache   available
+    Mem:            227          64         121           0          41         156
+    Swap:          3337           7        3330
+    jdevgarden:~/jmustache$ ./stop.sh 
+    killing 3124
+
+minimal running:
+    jdevgarden:~/jmustache$ cd ../minimalserver/
+    jdevgarden:~/minimalserver$ ./start.sh 
+    jdevgarden:~/minimalserver$ starting /myapp0 on port 8000
+    
+    jdevgarden:~/minimalserver$ 
+    jdevgarden:~/minimalserver$ free -m
+                  total        used        free      shared  buff/cache   available
+    Mem:            227          65         120           0          41         154
+    Swap:          3337           7        3330
+    jdevgarden:~/minimalserver$ ./stop.sh 
+    killing 3149
+
+nothing running:
+    jdevgarden:~/minimalserver$ free -m
+                  total        used        free      shared  buff/cache   available
+    Mem:            227          43         141           0          41         175
+    Swap:          3337           7        3330
+    jdevgarden:~/minimalserver$ 
