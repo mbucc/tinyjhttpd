@@ -1,24 +1,29 @@
-NAME=tinyjhttpd
-SRC=./${NAME}
-DST=./mods/${NAME}
-LIB=./mlib
+mlib/tinyjhttpd@1.jar: classes
+	mkdir -p mlib
+	jar --create \
+		--file=mlib/tinyjhttpd@1.jar \
+		--module-version 1 \
+		--main-class com/markbucciarelli/tinyjhttpd/Server \
+		-C ./mods/tinyjhttpd \
+		.
 
+classes: mods/tinyjhttpd/module-info.class \
+		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/Server.class
 
-${LIB}/${NAME}@1.jar: all
-	mkdir -p ${LIB}
-	jar --create --file=${LIB}/${NAME}@1.jar --module-version 1 --main-class com/markbucciarelli/${NAME}/Server -C ${DST} .
+mods/tinyjhttpd/%.class: src/tinyjhttpd/%.java
+	mkdir -p mods/tinyjhttpd
+	javac -d mods --module-path lib --module-source-path ./src $?
 
+test: mlib/tinyjhttpd@1.jar
+	@./stop.sh
+	@sleep 0.5
+	@./start.sh 9876
+	@sleep 0.5
+	curl -D- -sS http://127.0.0.1:9876/ |grep -v '^Date: '> test.out
+	diff -uw test.out test/expected.gold && echo PASS || echo FAIL
 
-.PHONY: all
-all: ${DST}/module-info.class ${DST}/com/markbucciarelli/${NAME}/Server.class
-
-
-${DST}/%.class: ${SRC}/%.java
-	javac -d mods --module-path lib --module-source-path . $?
-
-
-.PHONY:class
 clean:
-	rm -rf ${DST}
-	rm -rf ${LIB}
+	rm -rf mlib
+	rm -rf mods
+	rm -f test.out
 
