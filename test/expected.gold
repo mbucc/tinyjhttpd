@@ -1,4 +1,5 @@
-HTTP/1.1 200 OK
-Content-length: 27
+HTTP/1.1 404 Not Found
+Content-Length: 50
+Content-Type: text/html
 
-One, two, five. Three sir!
+<h1>404 Not Found</h1>No context found for request

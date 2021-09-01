@@ -8,6 +8,9 @@ mlib/tinyjhttpd@1.jar: classes
 		.
 
 classes: mods/tinyjhttpd/module-info.class \
+		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/AbstractHttpHandlerWithContext.class \
+		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/HandlerResponse.class \
+		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/HttpHandlerWithContext.class \
 		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/Server.class
 
 mods/tinyjhttpd/%.class: src/tinyjhttpd/%.java

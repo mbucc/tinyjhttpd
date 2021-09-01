@@ -1,4 +1,4 @@
 module tinyjhttpd {
   requires jdk.httpserver;
-  requires com.samskivert.jmustache;
+  uses com.markbucciarelli.tinyjhttpd.HttpHandlerWithContext;
 }
