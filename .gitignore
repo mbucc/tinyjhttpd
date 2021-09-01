@@ -1,2 +1,7 @@
 mlib
 mods
+
+.idea
+*.iml
+
+test.out
