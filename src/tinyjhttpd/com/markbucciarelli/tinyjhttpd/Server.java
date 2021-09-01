@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@SuppressWarnings("java:S106")  // Suppress warning about stderr.
 public class Server implements HttpHandler {
 
    public void handle(HttpExchange t) throws IOException {
@@ -22,7 +23,7 @@ public class Server implements HttpHandler {
 
         String text = "One, two, {{three}}. Three sir!\n";
         Template tmpl = Mustache.compiler().compile(text);
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         data.put("three", "five");
         String response = tmpl.execute(data);
 
@@ -34,20 +35,18 @@ public class Server implements HttpHandler {
 
     void read(InputStream x) throws IOException {
         long n = x.transferTo(System.out);
-        System.out.println("read " + n + " bytes");
+        System.out.printf("read %d bytes%n", n);
     }
 
    public static void main(String[] args) throws IOException {
         int port = 8000;
-        String context = "/myapp";
         if (args.length > 0) {
-            port += Integer.parseInt(args[0]);
-            context += args[0];
+            port = Integer.parseInt(args[0]);
         }
-        System.out.println(String.format("starting %s on port %d", context, port));
+        System.out.printf("starting port %d%n", port);
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext(context, new Server());
-        server.setExecutor(null); // creates a default executor
+        server.createContext("/", new Server());
+        server.setExecutor(null);
         server.start();
    }
 }
