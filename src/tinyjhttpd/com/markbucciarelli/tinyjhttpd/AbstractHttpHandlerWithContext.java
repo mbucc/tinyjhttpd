@@ -16,13 +16,15 @@ import java.util.Map;
  * The AbstractHttpHandlerWithContext catches exceptions and returns a 500.
  *
  * <p>
- *    The default HttpHandler just swallows the exception.  This implementation
- *    prints the stack trace to the resulting web page if the OS environmental
- *    variable DEBUG is defined.
+ *    The default behavior of com.sun.net.httpserver.HttpServer is to swallow
+ *    any exceptions raised in an com.sun.net.httpserver.HttpHandler's handle
+ *    method.  This base class implements a handle() that wraps the abstract
+ *    safeHandle(), and returns a 500 if safeHandle raises any exception.
  * </p>
  *
  * <p>
- *    By default, this set's the response content type to text/html.
+ *    If the environmental variable DEBUG is defined, the stack trace will be
+ *    included in the body of the 500 response.
  * </p>
  */
 public abstract class AbstractHttpHandlerWithContext implements HttpHandlerWithContext {
@@ -35,9 +37,7 @@ public abstract class AbstractHttpHandlerWithContext implements HttpHandlerWithC
 		"</body>\n" +
 		"</html>\n";
 
-
 	public abstract String getContext();
-
 	public abstract HandlerResponse safeHandle(HttpExchange x) throws IOException;
 
 	@Override
@@ -71,6 +71,8 @@ public abstract class AbstractHttpHandlerWithContext implements HttpHandlerWithC
 			os.write(response.body.getBytes(StandardCharsets.UTF_8));
 			os.close();
 		} catch (Exception e) {
+			// If we get here, we failed to write the 500 response, so simply
+			// output the stack trace to stderr and carry on.
 			e.printStackTrace();
 		}
 	}

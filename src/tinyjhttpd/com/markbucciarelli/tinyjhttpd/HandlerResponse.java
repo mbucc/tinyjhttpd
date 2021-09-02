@@ -5,17 +5,18 @@ import com.sun.net.httpserver.Headers;
 
 
 /**
- * A HandlerResponse contains the data required by the base handler class to
- * construct an HTTP response.
-
- * <p>
- *    This class defaults the Content-Type to text/html; charset=UTF-8. To change, this,
- *    use the "set" method on the Headers instance in this class.
- * </p>
+ * A HandlerResponse contains the data required by AbstractHttpHandlerWithContext
+ * to construct an HTTP response.
  *
  * <p>
  *    This class is not thread-safe, so a handler should create a new instance for
  *    each incoming request.
+ * </p>
+ *
+ * <p>
+ *    This class defaults the Content-Type to text/html; charset=UTF-8. To
+ *    set a different content type, use the "set" method on the Headers
+ *    instance in this class.
  * </p>
  */
 @SuppressWarnings("java:S1104")  // Lazy.  Read last paragraph above.
