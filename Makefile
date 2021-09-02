@@ -20,6 +20,7 @@ test: mlib/tinyjhttpd@1.jar
 	curl -D- -sS http://127.0.0.1:9876/ |grep -v '^Date: '> test.out
 	diff -uw test.out test/expected.gold && echo PASS || echo FAIL
 	@./stop.sh > /dev/null
+	@rm -f test.out
 
 clean:
 	rm -rf mlib
