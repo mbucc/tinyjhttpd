@@ -4,18 +4,13 @@ mlib/tinyjhttpd@1.jar: classes
 		--file=mlib/tinyjhttpd@1.jar \
 		--module-version 1 \
 		--main-class com/markbucciarelli/tinyjhttpd/Server \
-		-C ./mods/tinyjhttpd \
+		-C ./mods/com.markbucciarelli.tinyjhttpd/ \
 		.
 
-classes: mods/tinyjhttpd/module-info.class \
-		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/AbstractHttpHandlerWithContext.class \
-		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/HandlerResponse.class \
-		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/HttpHandlerWithContext.class \
-		mods/tinyjhttpd/com/markbucciarelli/tinyjhttpd/Server.class
-
-mods/tinyjhttpd/%.class: src/tinyjhttpd/%.java
-	mkdir -p mods/tinyjhttpd
-	javac -d mods --module-path lib --module-source-path ./src $?
+# --module-source-path ./server/src
+#		-m com.markbucciarelli.tinyjhttpd
+classes:
+	javac -d ./mods/com.markbucciarelli.tinyjhttpd $$(find server/src -name '*.java')
 
 test: mlib/tinyjhttpd@1.jar
 	@./stop.sh

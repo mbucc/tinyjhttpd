@@ -8,4 +8,4 @@
 #	  -p   --module-path
 #	  -m   --module
 
-java -p mlib:lib -m tinyjhttpd $port &
+java -p mlib:lib -m com.markbucciarelli.tinyjhttpd $port &
