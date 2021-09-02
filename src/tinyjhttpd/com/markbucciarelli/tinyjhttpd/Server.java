@@ -7,12 +7,17 @@ import java.util.ServiceLoader;
 
 
 /**
- * A Server contains a main entry point registers all HttpHandlerWithContext
- * implementations on the class path and listens on the HTTP protocol.
+ * A Server is the main class.
+ * It first
+ * registers all HttpHandlerWithContext implementations
+ * found on the class path,
+ * and then starts up an HTTP server.
  *
  * <p>
- *   The server takes a single optional command-line argument that defines the
- *   port to listen on.  The default port is 8000.
+ *   The server listens on port 8000 by default.
+ *   You can change this
+ *   by passing a different port as the first
+ *   command-line argument.
  * </p>
  *
  * <p>
