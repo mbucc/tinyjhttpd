@@ -1,5 +1,6 @@
 package com.markbucciarelli.tinyjhttpd.types;
 
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -70,15 +71,15 @@ public final class HTTPHeader {
   /**
    * Cache the resource for the given number of seconds.
    */
-  public static HTTPHeader cache(long seconds) {
-    if (seconds < 1) {
+  public static HTTPHeader cacheDays(long days) {
+    if (days < 1) {
       throw new IllegalArgumentException(
-        "cache duration must be a positive integer"
+        "cache duration (in days) must be a positive integer"
       );
     }
     return new HTTPHeader(
       HTTPHeaderName.CACHE_CONTROL,
-      String.format("max-age=%d", seconds)
+      String.format("max-age=%d", Duration.ofDays(days).toSeconds())
     );
   }
 

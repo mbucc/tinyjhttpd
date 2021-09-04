@@ -19,10 +19,65 @@ public final class HandlerResponse {
   private final String body;
   private final List<HTTPHeader> headers;
 
-	public HandlerResponse(int status, String body) {
-		this.status = status;
-		this.body = body;
-		headers = new Headers();
-		headers.add("Content-Type", "text/html; charset=UTF-8");
-	}
+  /**
+   * Defaults headers to HTML content type and cache to one day.
+   */
+  public HandlerResponse(HTTPStatus status, String body) {
+    this(
+      status,
+      body,
+      Arrays.asList(HTTPHeader.cacheDays(1), HTTPHeader.html())
+    );
+  }
+
+  public HandlerResponse(
+    HTTPStatus status,
+    String body,
+    List<HTTPHeader> headers
+  ) {
+    Objects.requireNonNull(status, "HTTP status code cannot be null");
+    this.status = status;
+    this.body = body == null ? "" : body;
+    this.headers =
+      headers == null ? Collections.emptyList() : new ArrayList<>(headers);
+  }
+
+  public HTTPStatus getStatus() {
+    return status;
+  }
+
+  public String getBody() {
+    return body;
+  }
+
+  public List<HTTPHeader> getHeaders() {
+    return new ArrayList<>(headers);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    HandlerResponse that = (HandlerResponse) o;
+    return (
+      status == that.status &&
+      body.equals(that.body) &&
+      headers.equals(that.headers)
+    );
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(status, body, headers);
+  }
+
+  @Override
+  public String toString() {
+    String fmt = "HandlerResponse<status=%s, body=%s, headers=%s>";
+    return String.format(fmt, status, body, headers);
+  }
 }
