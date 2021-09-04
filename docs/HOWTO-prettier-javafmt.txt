@@ -131,3 +131,21 @@ Configure IntelliJ (2021.2.1 is my version) to run prettier when file is saved.
 			Program                   npx
 			Arguments                 prettier --write $FileName$
 			Output paths to refresh   $FileName$
+			Uncheck all advanced options---let IntelliJ handle auto save.
+
+
+Increase auto-save delay
+	IntelliJ was saving very quickly after I stopped typing.
+	This was because I had "Auto-save edited files to trigger the watcher" checked
+	in the File Watcher configuration.
+
+	This is super disruptive to editing---once the file was reformatted
+	when I was in the middle of a rename refactor, and IntelliJ created
+	the new constant name as "D" (because that was as far as I had typed).
+
+	Configure IntelliJ to autosave when IDE idle for 5 seconds.
+	Preferences
+		-> Appearance & Behavior
+		-> System Settings
+			"Autosave" section
+			Check box next to "Save files if the IDE is idle for 5 seconds
