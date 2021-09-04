@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ServiceLoader;
 
-
 /**
  * A Server is the main class.
  * It first
@@ -31,8 +30,8 @@ import java.util.ServiceLoader;
  *   Executor, which controls thread use and scheduling.
  * </p>
  */
-@SuppressWarnings("java:S106")  // Suppress warning about using stdout.
-public class Server  {
+@SuppressWarnings("java:S106") // Suppress warning about using stdout.
+public class Server {
 
   public static void main(String[] args) throws IOException {
     int port = 8000;
@@ -45,18 +44,19 @@ public class Server  {
     }
     System.out.printf("starting server port %d%n", port);
     HttpServer server = HttpServer.create(new InetSocketAddress(port), backlog);
-    ServiceLoader.load(HttpHandlerWithContext.class)
-        .stream()
-        .map(ServiceLoader.Provider::get)
-        .forEach(o -> {
-          // Note: I wanted to print the classname here, but getSimpleName() is
-          // implemented with reflection.  Since a handler may be in a module
-          // that does not allow reflection, we can't do that.
-          // TODO: Investigate Java 9's LoggerFinder.
-          System.out.printf("registering route for %s%n", o.getContext());
-          server.createContext(o.getContext(), o);
-        });
-    // TODO: Use ServiceLoader and allow a client to specify the Executor.
+    ServiceLoader
+      .load(HTTPHandlerWithContext.class)
+      .stream()
+      .map(ServiceLoader.Provider::get)
+      .forEach(o -> {
+        // Note: I wanted to print the classname here, but getSimpleName() is
+        // implemented with reflection.  Since a handler may be in a module
+        // that does not allow reflection, we can't do that.
+        // TODO: Investigate Java 9's LoggerFinder.
+        System.out.printf("registering route for %s%n", o.getContext());
+        server.createContext(o.getContext(), o);
+      });
+    // TODO: Use ServiceLoader to allow a client to specify a different Executor.
     server.setExecutor(null);
     server.start();
   }

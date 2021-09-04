@@ -1,29 +1,23 @@
 package com.markbucciarelli.tinyjhttpd;
 
-
-import com.sun.net.httpserver.Headers;
-
+import com.markbucciarelli.tinyjhttpd.types.HTTPHeader;
+import com.markbucciarelli.tinyjhttpd.types.HTTPStatus;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * A HandlerResponse contains the data required by AbstractHttpHandlerWithContext
+ * A HandlerResponse contains the data required by BaseHTTPHandler
  * to construct an HTTP response.
- *
- * <p>
- *    This class is not thread-safe, so a handler should create a new instance for
- *    each incoming request.
- * </p>
- *
- * <p>
- *    This class defaults the Content-Type to text/html; charset=UTF-8. To
- *    set a different content type, use the "set" method on the Headers
- *    instance in this class.
- * </p>
  */
-@SuppressWarnings("java:S1104")  // Lazy.  Read last paragraph above.
+
 public final class HandlerResponse {
-	public int status;
-	public String body;
-	public Headers headers = new Headers();
+
+  private final HTTPStatus status;
+  private final String body;
+  private final List<HTTPHeader> headers;
 
 	public HandlerResponse(int status, String body) {
 		this.status = status;
