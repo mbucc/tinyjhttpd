@@ -22,6 +22,10 @@ test: mlib/tinyjhttpd@1.jar
 	@./stop.sh > /dev/null
 	@rm -f test.out
 
+
+fmt:
+	npx prettier --write "**/*.java"
+
 clean:
 	rm -rf mlib
 	rm -rf mods

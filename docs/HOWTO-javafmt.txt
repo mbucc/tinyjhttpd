@@ -1,0 +1,133 @@
+September 4, 2021
+How to format Java code ala gofmt
+
+Use https://github.com/jhipster/prettier-java.
+
+Get node.js
+	https://nodejs.org/en/
+	Download 14.17.6 LTS (node-v14.17.6.pkg)
+   		Node.js v14.17.6 to /usr/local/bin/node
+   		npm v6.14.15 to /usr/local/bin/npm
+
+Check that /usr/local/bin is on path
+	mark@Marks-MBP-3 ~ % echo $PATH|tr \: \\n |grep /usr/local/bin
+        /usr/local/bin
+
+Install just for my user.
+	$ npm install prettier-plugin-java --save-dev
+	npm WARN saveError ENOENT: no such file or directory, open '/Users/mark/package.json'
+        npm notice created a lockfile as package-lock.json. You should commit this file.
+        npm WARN enoent ENOENT: no such file or directory, open '/Users/mark/package.json'
+        npm WARN mark No description
+        npm WARN mark No repository field.
+        npm WARN mark No README data
+        npm WARN mark No license field.
+
+        + prettier-plugin-java@1.4.0
+        added 6 packages from 4 contributors and audited 6 packages in 3.861s
+        found 0 vulnerabilities
+        $
+
+
+Init npm package (just use defaults) to make npm happy.
+	I guess b/c it is installed locally, npm expects a package.json?
+
+	mark@Marks-MBP-3 ~ % npm init
+        This utility will walk you through creating a package.json file.
+        It only covers the most common items, and tries to guess sensible defaults.
+
+        See `npm help init` for definitive documentation on these fields
+        and exactly what they do.
+
+        Use `npm install <pkg>` afterwards to install a package and
+        save it as a dependency in the package.json file.
+
+        Press ^C at any time to quit.
+        package name: (mark)
+        version: (1.0.0)
+        description:
+        entry point: (.mongorc.js)
+        test command:
+        git repository:
+        keywords:
+        author:
+        license: (ISC)
+        About to write to /Users/mark/package.json:
+
+        {
+          "name": "mark",
+          "version": "1.0.0",
+          "description": "$ sudo gem install watir-webdriver --no-ri --no-rdoc Password: Fetching: multi_json-1.8.1.gem (100%) Successfully installed multi_json-1.8.1 Fetching: rubyzip-0.9.9.gem (100%) Successfully installed rubyzip-0.9.9 Fetching: ffi-1.9.0.gem (100%) Building native extensions.  This could take a while... Successfully installed ffi-1.9.0 Fetching: childprocess-0.3.9.gem (100%) Successfully installed childprocess-0.3.9 Fetching: websocket-1.0.7.gem (100%) Successfully installed websocket-1.0.7 Fetching: selenium-webdriver-2.35.1.gem (100%) Successfully installed selenium-webdriver-2.35.1 Fetching: watir-webdriver-0.6.4.gem (100%) Successfully installed watir-webdriver-0.6.4 Done installing documentation for multi_json, rubyzip, ffi, childprocess, websocket, selenium-webdriver, watir-webdriver (0 sec). 7 gems installed $ irb irb(main):001:0> require \"watir-webdriver\" => true irb(main):002:0> browser = Watir::Browser.new :ff => #<Watir::Browser:0x5b84913ba6b94242 url=\"about:blank\" title=\"\"> irb(main):003:0> browser.goto \"192.168.30.117:8000\" => \"http://192.168.30.117:8000/\" irb(main):004:0> exit $",
+          "main": ".mongorc.js",
+          "directories": {
+            "doc": "doc"
+          },
+          "dependencies": {
+            "prettier-plugin-java": "^1.4.0"
+          },
+          "devDependencies": {},
+          "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1"
+          },
+          "author": "",
+          "license": "ISC"
+        }
+
+
+        Is this OK? (yes) yes
+        mark@Marks-MBP-3 ~ %
+
+And now npm install runs w/o warning
+
+	mark@Marks-MBP-3 ~ % npm install prettier-plugin-java --save-dev
+        npm notice save prettier-plugin-java is being moved from dependencies to devDependencies
+        npm WARN mark@1.0.0 No repository field.
+
+        + prettier-plugin-java@1.4.0
+        updated 1 package and audited 6 packages in 2.439s
+        found 0 vulnerabilities
+
+        mark@Marks-MBP-3 ~ %
+
+Try it
+
+	mark@Marks-MBP-3 tinyjhttpd % npx prettier --write "**/*.java"
+        com.example.helloworld/src/com/example/helloworld/HelloWorldHandler.java 16ms
+        com.example.helloworld/src/module-info.java 6ms
+        server/src/com/markbucciarelli/tinyjhttpd/BaseHTTPHandler.java 47ms
+        server/src/com/markbucciarelli/tinyjhttpd/HandlerResponse.java 48ms
+        server/src/com/markbucciarelli/tinyjhttpd/HTTPHandlerWithContext.java 7ms
+        server/src/com/markbucciarelli/tinyjhttpd/Server.java 19ms
+        server/src/com/markbucciarelli/tinyjhttpd/types/Header.java 32ms
+        server/src/com/markbucciarelli/tinyjhttpd/types/HeaderName.java 22ms
+        server/src/com/markbucciarelli/tinyjhttpd/types/Media.java 57ms
+        server/src/com/markbucciarelli/tinyjhttpd/types/Status.java 25ms
+        server/src/module-info.java 4ms
+        test/helloworld/src/com/example/hello/HelloWorld.java 7ms
+        test/helloworld/src/module-info.java 3ms
+        mark@Marks-MBP-3 tinyjhttpd %
+
+Add fmt target to Makefile.
+
+It works in IntelliJ make window ("Makefile Language" plugin).
+
+Read configuration schema.
+	http://json.schemastore.org/prettierrc
+	Defaults look good to me (80 char width, no tabs, two-space indent)
+
+Configure IntelliJ (2021.2.1 is my version) to run prettier when file is saved.
+	https://github.com/jhipster/prettier-java/blob/main/docs/advanced_usage.md
+	(The steps at the above link didn't work with my IntelliJ.)
+
+	Install IntelliJ's "File Watchers" plugin.
+	Restart IntelliJ
+	Preferences
+		-> Tools/File Watchers
+		-> click '+', use custom template
+		-> Fill out form
+			Name                      Prettier Java
+			File type                 Java (in picker)
+			Scope                     Project Files (in picker)
+			Program                   npx
+			Arguments                 prettier --write $FileName$
+			Output paths to refresh   $FileName$
