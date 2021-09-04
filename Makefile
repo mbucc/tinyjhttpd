@@ -15,6 +15,7 @@ classes:
 test: mlib/tinyjhttpd@1.jar mlib/helloworld@1.jar
 	@./test/runtest.sh 1 "server starts successfully" "/"
 	@./test/runtest.sh 2 "hello world handler works" "/hello"
+	@./test/runload.sh 3 "memorytest" "/hello"
 	@rm -f test/*.out
 
 testclasses: mlib/tinyjhttpd@1.jar
