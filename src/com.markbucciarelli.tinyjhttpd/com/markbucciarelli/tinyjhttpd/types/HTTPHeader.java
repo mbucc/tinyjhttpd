@@ -90,7 +90,7 @@ public final class HTTPHeader {
     );
   }
 
-  public static HTTPHeader plain() {
+  public static HTTPHeader plaintext() {
     return new HTTPHeader(
       HTTPHeaderName.CONTENT_TYPE,
       MediaType.TXT.getValue() + UTF8_CHARSET

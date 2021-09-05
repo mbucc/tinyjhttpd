@@ -19,7 +19,7 @@ public class HelloWorld extends BaseHTTPHandler {
     return new HandlerResponse(
       HTTPStatus.OK,
       "Hello World",
-      Arrays.asList(HTTPHeader.cacheDays(365), HTTPHeader.plain())
+      Arrays.asList(HTTPHeader.cacheDays(365), HTTPHeader.plaintext())
     );
   }
 }
