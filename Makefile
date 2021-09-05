@@ -1,7 +1,7 @@
 jars: classes
 	mkdir -p mlib
 	jar --create \
-		--file=mlib/tinyjhttpd@1.jar \
+		--file=mlib/com.markbucciarelli.tinyjhttpd@1.jar \
 		--module-version 1 \
 		--main-class com/markbucciarelli/tinyjhttpd/Server \
 		-C ./classes/com.markbucciarelli.tinyjhttpd/ \
@@ -10,7 +10,7 @@ jars: classes
 testjars: classes
 	mkdir -p mlib
 	jar --create \
-		--file=mlib/helloworld@1.jar \
+		--file=mlib/com.example.helloworld@1.jar \
 		--module-version 1 \
 		--main-class com/example/helloworld/Server \
 		-C ./classes/com.example.helloworld/ \
