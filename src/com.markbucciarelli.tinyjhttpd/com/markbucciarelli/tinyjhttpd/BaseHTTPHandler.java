@@ -36,8 +36,6 @@ public abstract class BaseHTTPHandler implements HTTPHandlerWithContext {
     "</body>\n" +
     "</html>\n";
 
-  public abstract String getContext();
-
   public abstract HandlerResponse safeHandle(HttpExchange x);
 
   @Override
