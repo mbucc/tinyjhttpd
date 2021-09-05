@@ -15,7 +15,8 @@
 n="$1"
 name="$2"
 route="$3"
-limit_in_mb=45
+max_rss=45
+min_rss=20
 
 # setup
 ./stop.sh > /dev/null
@@ -31,7 +32,7 @@ rss=$(ps x -orss,args\
   |grep 'java.*tinyjhttpd' \
   |grep -v grep\
   |awk '{printf "%.0f", $1/1024}')
-name="$name: $rss < $limit_in_mb?"
+name="$name: $min_rss < $rss < $max_rss?"
 printf "%-65s" "$name"
-[ $rss -lt $limit_in_mb ] && echo PASS || echo FAIL
+[ $rss -lt $max_rss -a $rss -gt $min_rss ] && echo PASS || echo FAIL
 ./stop.sh > /dev/null
