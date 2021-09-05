@@ -1,5 +1,5 @@
 starting server port 9876
-registering route for /hello
+registering route /hello to com.example.helloworld.HelloWorld
 HTTP/1.1 404 Not Found
 Content-Length: 50
 Content-Type: text/html

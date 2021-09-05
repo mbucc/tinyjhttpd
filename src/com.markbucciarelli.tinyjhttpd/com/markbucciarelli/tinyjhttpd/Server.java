@@ -49,11 +49,15 @@ public class Server {
       .stream()
       .map(ServiceLoader.Provider::get)
       .forEach(o -> {
-        // Note: I wanted to print the classname here, but getSimpleName() is
-        // implemented with reflection.  Since a handler may be in a module
-        // that does not allow reflection, we can't do that.
+        // TODO: Why does getClass().getName() work?
+        // It thought that uses reflection and the com.example.helloworld
+        // module-info does not open up that class, it just provides it.
         // TODO: Investigate Java 9's LoggerFinder.
-        System.out.printf("registering route for %s%n", o.getContext());
+        System.out.printf(
+          "registering route %s to %s%n",
+          o.getContext(),
+          o.getClass().getName()
+        );
         server.createContext(o.getContext(), o);
       });
     // TODO: Use ServiceLoader to allow a client to specify a different Executor.

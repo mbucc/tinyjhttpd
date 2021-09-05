@@ -1,5 +1,5 @@
 starting server port 9876
-registering route for /hello
+registering route /hello to com.example.helloworld.HelloWorld
 HTTP/1.1 200 OK
 Date:
 Content-type: text/plain; charset= UTF-8
