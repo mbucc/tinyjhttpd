@@ -15,6 +15,6 @@ sleep 0.5
 curl -D- -sS http://127.0.0.1:9876${route} \
   |sed 's/^Date:.*/Date:/'>> test/$fn.out
 printf "%-65s" "$name"
-diff -uw test/$fn.out test/$fn.gold >&2 && echo PASS || echo FAIL
+diff -uw test/$fn.gold test/$fn.out >&2 && echo PASS || echo FAIL
 ./stop.sh > /dev/null
 rm -f test.out
