@@ -16,13 +16,13 @@ import java.util.Objects;
 public final class HandlerResponse {
 
   private final HTTPStatus status;
-  private final String body;
+  private final byte[] body;
   private final List<HTTPHeader> headers;
 
   /**
    * Defaults headers to HTML content type and cache to one day.
    */
-  public HandlerResponse(HTTPStatus status, String body) {
+  public HandlerResponse(HTTPStatus status, byte[] body) {
     this(
       status,
       body,
@@ -32,12 +32,12 @@ public final class HandlerResponse {
 
   public HandlerResponse(
     HTTPStatus status,
-    String body,
+    byte[] body,
     List<HTTPHeader> headers
   ) {
     Objects.requireNonNull(status, "HTTP status code cannot be null");
     this.status = status;
-    this.body = body == null ? "" : body;
+    this.body = body == null ? new byte[] {} : body;
     this.headers =
       headers == null ? Collections.emptyList() : new ArrayList<>(headers);
   }
@@ -46,7 +46,7 @@ public final class HandlerResponse {
     return status;
   }
 
-  public String getBody() {
+  public byte[] getBody() {
     return body;
   }
 
@@ -65,19 +65,29 @@ public final class HandlerResponse {
     HandlerResponse that = (HandlerResponse) o;
     return (
       status == that.status &&
-      body.equals(that.body) &&
+      Arrays.equals(body, that.body) &&
       headers.equals(that.headers)
     );
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, body, headers);
+    int result = Objects.hash(status, headers);
+    result = 31 * result + Arrays.hashCode(body);
+    return result;
   }
 
   @Override
   public String toString() {
-    String fmt = "HandlerResponse<status=%s, body=%s, headers=%s>";
-    return String.format(fmt, status, body, headers);
+    return (
+      "HandlerResponse{" +
+      "status=" +
+      status +
+      ", body=" +
+      Arrays.toString(body) +
+      ", headers=" +
+      headers +
+      '}'
+    );
   }
 }

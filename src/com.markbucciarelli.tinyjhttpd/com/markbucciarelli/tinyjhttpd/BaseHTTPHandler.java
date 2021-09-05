@@ -54,7 +54,7 @@ public abstract class BaseHTTPHandler implements HTTPHandlerWithContext {
       response =
         new HandlerResponse(
           HTTPStatus.INTERNAL_SERVER,
-          String.format(ERR_FMT, stack)
+          String.format(ERR_FMT, stack).getBytes(StandardCharsets.UTF_8)
         );
     }
 
@@ -65,10 +65,10 @@ public abstract class BaseHTTPHandler implements HTTPHandlerWithContext {
       }
       x.sendResponseHeaders(
         response.getStatus().getCode(),
-        response.getBody().getBytes(StandardCharsets.UTF_8).length
+        response.getBody().length
       );
       OutputStream os = x.getResponseBody();
-      os.write(response.getBody().getBytes(StandardCharsets.UTF_8));
+      os.write(response.getBody());
       os.close();
     } catch (Exception e) {
       // If we get here, we failed to write the 500 response, so simply
