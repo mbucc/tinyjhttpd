@@ -131,5 +131,17 @@ Configure IntelliJ to work with module-source-path.
 		  </component>
 		</module>
 
+Configure IntelliJ build module to match Makefile.
+So right-click, build module in IntelliJ puts classes in the same place make does.
+
+	1. Open module settings for the module.
+
+	2. Click "Paths" under the "Name: {{your-module-name}}" in the middle pane.
+
+	3. Pick "Use module compile output path"
+
+	4. Replace "out/production" with "classes" in output path.
+
+
 [1] https://nipafx.dev/build-modules/
 [2] https://www.baeldung.com/java-9-modularity
