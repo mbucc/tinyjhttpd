@@ -1,44 +1,35 @@
-mlib/tinyjhttpd@1.jar: classes
+jars: classes
 	mkdir -p mlib
 	jar --create \
 		--file=mlib/tinyjhttpd@1.jar \
 		--module-version 1 \
 		--main-class com/markbucciarelli/tinyjhttpd/Server \
-		-C ./mods/com.markbucciarelli.tinyjhttpd/ \
+		-C ./classes/com.markbucciarelli.tinyjhttpd/ \
 		.
 
-# --module-source-path ./server/src
-#		-m com.markbucciarelli.tinyjhttpd
-classes:
-	javac -d ./mods/com.markbucciarelli.tinyjhttpd $$(find server/src -name '*.java')
-
-test: mlib/tinyjhttpd@1.jar mlib/helloworld@1.jar
-	@./test/runtest.sh 1 "server starts successfully" "/"
-	@./test/runtest.sh 2 "hello world handler works" "/hello"
-	@./test/runload.sh 3 "memorytest" "/hello"
-	@rm -f test/*.out
-
-testclasses: mlib/tinyjhttpd@1.jar
-	javac \
-		--module-path ./mlib \
-		-d ./mods/com.example.helloworld \
-		$$(find test/helloworld -name '*.java')
-
-mlib/helloworld@1.jar: testclasses
+testjars: classes
+	mkdir -p mlib
 	jar --create \
 		--file=mlib/helloworld@1.jar \
 		--module-version 1 \
-		-C ./mods/com.example.helloworld/ \
-	    .
+		--main-class com/example/helloworld/Server \
+		-C ./classes/com.example.helloworld/ \
+		.
 
-test2: mlib/tinyjhttpd@1.jar mlib/helloworld@1.jar
+classes:
+	javac -d ./classes --module-source-path src $$(find src -name '*.java')
 
+test: jars testjars
+	@./test/runtest.sh 1 "server starts successfully" "/"
+	@./test/runtest.sh 2 "hello world handler works" "/hello"
+	@./test/runload.sh 3 "server resident set size (RSS) test" "/hello"
+	@rm -f test/*.out
 
 fmt:
 	npx prettier --write "**/*.java"
 
 clean:
 	rm -rf mlib
-	rm -rf mods
+	rm -rf classes
 	rm -f test/*.out
 

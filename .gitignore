@@ -1,7 +1,7 @@
 mlib
-mods
+classes
 
 .idea
 *.iml
 
-test.out
+*.out
