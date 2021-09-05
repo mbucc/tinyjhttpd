@@ -1,0 +1,135 @@
+September 5, 2021
+Reconcile IntelliJ, Java 9 modules, and javac
+
+Nicolai Parlog's blog post "Java Modules Cheat Sheet" [1] was super helpful.
+
+There is a new way to specify dependencies:
+
+	javac \
+		<dependencies> \
+		-d <where-compiled-classes-go> \
+		<options> \
+		<sources>
+
+	Before Java9:
+		-cp jar1:jar2 (or jar1;jar2 on windows)
+		-cp lib/*.jar
+
+	After Java9, you have another option:
+		-p mlib
+
+	You can mix and match.
+
+What does module-source-path do?
+
+	It add a directory for each module in the compiled classes directory tree.
+	This means you can compile an entire suite of modules with one command.
+
+	Given the source tree:
+
+		modules
+		└── com.markbucciarelli.tinyjhttpd
+		    ├── com
+		    │   └── markbucciarelli
+		    │       └── tinyjhttpd
+		    │           └── Server.java
+		    └── module-info.java
+
+	With module-source-path, javac adds a parent directory for each module.
+
+		$ javac \
+			-d classes \
+			--module-source-path modules \
+			$(find modules -name "*.java")
+
+		$ tree classes
+		classes
+                └── com.markbucciarelli.tinyjhttpd
+                    ├── com
+                    │   └── markbucciarelli
+                    │       └── tinyjhttpd
+                    │           └── Server.class
+                    └── module-info.class
+
+
+	Without module-source-path, javac groups by package names.
+
+		$ javac -d classes  $(find modules -name "*.java")
+
+		$ tree classes
+		classes
+                ├── com
+                │   └── markbucciarelli
+                │       └── tinyjhttpd
+                │           └── Server.class
+                └── module-info.class
+
+
+
+Configure IntelliJ to work with module-source-path.
+
+	The typical module source layout that you find on the internet [2]
+	looks like this:
+
+		modules
+		├── com.markbucciarelli.tinyjhttpd
+		│   ├── com
+		│   │   └── markbucciarelli
+		│   │       └── tinyjhttpd
+		│   │           └── Server.java
+		│   └── module-info.java
+		└── com.markbucciarelli.consolelogger
+		    ├── com
+		    │   └── markbucciarelli
+		    │       └── consolelogger
+		    │           └── Logger.java
+		    └── module-info.java
+
+	This works great with module-source-path, as you can compile all
+	classes with one command.
+
+	You can make IntelliJ work with this structure.
+
+		1. Right click on the project root tinyjhttp (in Project view).
+
+		2. Click New -> Module...
+
+		3. In dialog box that opens:
+			- pick Java in left pane
+			- Module SDK: Java 9 or higher
+			- Additional Libraries and Frameworks (uncheck all)
+			- click Next
+
+		4. In next dialog,
+			- click folder icon in "Content root:" picker
+			- pick the directory modules/com.markbucciarelli.tinyjhttpd
+			- click Finish
+
+		5. Right click on the (now bold) directory com.markbucciarelli.tinyjhttpd
+			- pick "Open Module Settings
+			- in the right pane where it says "Add Content Root",
+                          remove the source folder "/src" by clicking the "X"
+			  to the right of that directory name.
+			- Click "OK"
+
+		6. Back in the Project view, right click on the folder
+		   com.markbucciarelli.tinyjhttpd/src and delete it.
+
+	If you see any errors in your module, resave the module-info.java class.
+
+	My com.markbucciarelli.tinyjhttpd.iml ended up looking like this:
+
+		<?xml version="1.0" encoding="UTF-8"?>
+		<module type="JAVA_MODULE" version="4">
+		  <component name="NewModuleRootManager" inherit-compiler-output="true">
+		    <exclude-output />
+		    <content url="file://$MODULE_DIR$">
+		      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+		    </content>
+		    <orderEntry type="inheritedJdk" />
+		    <orderEntry type="sourceFolder" forTests="false" />
+		  </component>
+		</module>
+
+[1] https://nipafx.dev/build-modules/
+[2] https://www.baeldung.com/java-9-modularity
