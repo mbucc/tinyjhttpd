@@ -31,7 +31,7 @@ rss=$(ps x -orss,args\
   |grep 'java.*tinyjhttpd' \
   |grep -v grep\
   |awk '$1 ~ /[0-9]m/ {printf "%.0f", $1;next} {printf "%.0f", $1/1024}')
-name="$name: $min_rss < $rss < $max_rss?"
+name="$name: ${min_rss}m < ${rss}m < ${max_rss}m?"
 printf "%-65s" "$name"
 [ $rss -lt $max_rss -a $rss -gt $min_rss ] && echo PASS || echo FAIL
 ./stop.sh > /dev/null
