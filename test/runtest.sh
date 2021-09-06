@@ -22,6 +22,7 @@ rmports() {
 
 ./stop.sh > /dev/null
 sleep 0.5
+[ "x$n" = "x1" ] && export DEBUG=1 || unset DEBUG
 ./start.sh 9876 >test/server.out 2>&1
 sleep 0.5
 

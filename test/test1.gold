@@ -3,6 +3,7 @@
 <Date.toString()> registering route /hello to com.example.helloworld.HelloWorld
 <Date.toString()> context created: /hello
 <Date.toString()> Exchange request line: GET / HTTP/1.1
+<Date.toString()> GET / HTTP/1.1 [404  Not Found] (No context found for request)
 HTTP/1.1 404 Not Found
 Content-Length: 50
 Content-Type: text/html

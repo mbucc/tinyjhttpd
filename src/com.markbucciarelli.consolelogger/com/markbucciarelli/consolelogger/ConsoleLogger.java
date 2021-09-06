@@ -28,7 +28,7 @@ public class ConsoleLogger implements System.Logger {
   public boolean isLoggable(Level level) {
     boolean y = level == Level.INFO || level == Level.ERROR;
     if (System.getenv("DEBUG") != null) {
-      y &= (level == Level.DEBUG || level == Level.TRACE);
+      y |= level == Level.DEBUG || level == Level.TRACE;
     }
     return y;
   }
