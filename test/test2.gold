@@ -1,5 +1,10 @@
-starting server port 9876
-registering route /hello to com.example.helloworld.HelloWorld
+<Date.toString()> creating HttpServer on port 9876
+<Date.toString()> HttpServer created http 0.0.0.0/0.0.0.0:9876
+<Date.toString()> registering route /hello to com.example.helloworld.HelloWorld
+<Date.toString()> context created: /hello
+<Date.toString()> Exchange request line: GET /hello HTTP/1.1
+<Date.toString()> no request line: closing
+<Date.toString()> Closing connection: java.nio.channels.SocketChannel[connected local=/127.0.0.1:9876 remote=/127.0.0.1:<localport>]
 HTTP/1.1 200 OK
 Date:
 Content-type: text/plain; charset= UTF-8

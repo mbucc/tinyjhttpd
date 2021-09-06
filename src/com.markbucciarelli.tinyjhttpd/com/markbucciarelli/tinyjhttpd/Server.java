@@ -1,5 +1,7 @@
 package com.markbucciarelli.tinyjhttpd;
 
+import static java.lang.System.Logger.Level.INFO;
+
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -29,38 +31,42 @@ import java.util.ServiceLoader;
  *   It also uses the default
  *   Executor, which controls thread use and scheduling.
  * </p>
+ *
+ * @see <a href="http://acme.com/software/thttpd/thttpd_man.html">thttpd</a>
  */
-@SuppressWarnings("java:S106") // Suppress warning about using stdout.
 public class Server {
+
+  private static final System.Logger LOGGER = System.getLogger("ConsoleLogger");
 
   public static void main(String[] args) throws IOException {
     int port = 8000;
     if (args.length > 0) {
       port = Integer.parseInt(args[0]);
     }
+    String hostname = null; //"localhost";
     int backlog = 0;
     if (args.length > 1) {
       backlog = Integer.parseInt(args[1]);
     }
-    System.out.printf("starting server port %d%n", port);
-    HttpServer server = HttpServer.create(new InetSocketAddress(port), backlog);
+    LOGGER.log(INFO, "creating HttpServer on port {0}", String.valueOf(port));
+    InetSocketAddress address = hostname == null
+      ? new InetSocketAddress(port)
+      : new InetSocketAddress(hostname, port);
+    HttpServer server = HttpServer.create(address, backlog);
     ServiceLoader
       .load(HTTPHandlerWithContext.class)
       .stream()
       .map(ServiceLoader.Provider::get)
       .forEach(o -> {
         // TODO: Why does getClass().getName() work?
-        // It thought that uses reflection and the com.example.helloworld
-        // module-info does not open up that class, it just provides it.
-        // TODO: Investigate Java 9's LoggerFinder.
-        System.out.printf(
-          "registering route %s to %s%n",
+        LOGGER.log(
+          INFO,
+          "registering route {0} to {1}",
           o.getContext(),
           o.getClass().getName()
         );
         server.createContext(o.getContext(), o);
       });
-    // TODO: Use ServiceLoader to allow a client to specify a different Executor.
     server.setExecutor(null);
     server.start();
   }
