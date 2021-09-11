@@ -16,6 +16,7 @@ Tests run with:
 		 12 m	VM.shared
 		  8 m	VM.code
 		  6 m	VM.heap
+		  3 m	VM.Arena
 
 	Try #1: serial
 		 82 m	RSS (17 m less than G1)
@@ -25,6 +26,20 @@ Tests run with:
 		 12 m	VM.shared
 		  8 m	VM.code
 		  6 m	VM.heap
+		 11 m	VM.Arena
+
+	Try #2: jlhttp (a server written by Amichai Rothman)
+	35% less RSS than try #1.
+	Even with lots of thread memory used.
+		 53 m	RSS (46 m less than G1)
+		 81 m	total VM.native_memory (+21m over startup)
+		  0.01 m	VM.gc
+		 41 m	VM.thread   <-- b/c no keep-alive I think.
+		 12 m	VM.shared
+		  8 m	VM.code
+		  6 m	VM.heap
+		 11 m	VM.Arena
+
 
 	Performance Note:
 
@@ -128,3 +143,179 @@ Try #1: UseSerial
              271KB     +155KB   Synchronization
               22KB      +10KB   Metaspace
             2688KB    +1280KB   Unknown
+
+Try #2: jlhttp (a server written by Amichai Rothman)
+
+	8470:
+        Baseline succeeded
+
+
+        ab
+        -----------------------------
+        This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
+        Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+        Licensed to The Apache Software Foundation, http://www.apache.org/
+
+        Benchmarking 127.0.0.1 (be patient)
+        Completed 1000 requests
+        Completed 2000 requests
+        Completed 3000 requests
+        Completed 4000 requests
+        Completed 5000 requests
+        Completed 6000 requests
+        Completed 7000 requests
+        Completed 8000 requests
+        Completed 9000 requests
+        Completed 10000 requests
+        Finished 10000 requests
+
+
+        Server Software:        JLHTTP/2.6
+        Server Hostname:        127.0.0.1
+        Server Port:            8000
+
+        Document Path:          /hello.txt
+        Document Length:        12 bytes
+
+        Concurrency Level:      25
+        Time taken for tests:   3.218 seconds
+        Complete requests:      10000
+        Failed requests:        0
+        Keep-Alive requests:    0
+        Total transferred:      2280000 bytes
+        HTML transferred:       120000 bytes
+        Requests per second:    3107.79 [#/sec] (mean)
+        Time per request:       8.044 [ms] (mean)
+        Time per request:       0.322 [ms] (mean, across all concurrent requests)
+        Transfer rate:          691.97 [Kbytes/sec] received
+
+        Connection Times (ms)
+                      min  mean[+/-sd] median   max
+        Connect:        1    4   1.1      4      18
+        Processing:     1    4   1.3      4      69
+        Waiting:        1    4   1.2      4      51
+        Total:          5    8   2.0      7      71
+
+        Percentage of the requests served within a certain time (ms)
+          50%      7
+          66%      8
+          75%      8
+          80%      8
+          90%     10
+          95%     11
+          98%     13
+          99%     14
+         100%     71 (longest request)
+
+
+        VM.native_memory
+        -----------------------------
+        8470:
+
+        Native Memory Tracking:
+
+        Total: reserved=1378224KB +35115KB, committed=82888KB +35755KB
+
+        -                 Java Heap (reserved=6144KB, committed=6144KB)
+                                    (mmap: reserved=6144KB, committed=6144KB)
+
+        -                     Class (reserved=1048789KB +50KB, committed=405KB +50KB)
+                                    (classes #1217 +167)
+                                    (  instance classes #1073 +160, array classes #144 +7)
+                                    (malloc=213KB +50KB #2554 +1005)
+                                    (mmap: reserved=1048576KB, committed=192KB)
+                                    (  Metadata:   )
+                                    (    reserved=8192KB, committed=1664KB +640KB)
+                                    (    used=1581KB +638KB)
+                                    (    free=83KB +2KB)
+                                    (    waste=0KB =0.00%)
+                                    (  Class space:)
+                                    (    reserved=1048576KB, committed=192KB)
+                                    (    used=117KB +33KB)
+                                    (    free=75KB -33KB)
+                                    (    waste=0KB =0.00%)
+
+        -                    Thread (reserved=41063KB +25666KB, committed=41063KB +25666KB)
+                                    (thread #0)
+                                    (stack: reserved=40960KB +25600KB, committed=40960KB +25600KB)
+                                    (malloc=60KB +38KB #242 +150)
+                                    (arena=43KB +27 #76 +48)
+
+        -                      Code (reserved=247924KB +162KB, committed=7784KB +162KB)
+                                    (malloc=236KB +162KB #1560 +803)
+                                    (mmap: reserved=247688KB, committed=7548KB)
+
+        -                        GC (reserved=85KB +18KB, committed=85KB +18KB)
+                                    (malloc=57KB +18KB #183 +28)
+                                    (mmap: reserved=28KB, committed=28KB)
+
+        -                  Compiler (reserved=346KB +177KB, committed=346KB +177KB)
+                                    (malloc=179KB +175KB #122 +76)
+                                    (arena=167KB +2 #7 +2)
+
+        -                  Internal (reserved=197KB +46KB, committed=197KB +46KB)
+                                    (malloc=165KB +46KB #769 +135)
+                                    (mmap: reserved=32KB, committed=32KB)
+
+        -                     Other (reserved=94KB +94KB, committed=94KB +94KB)
+                                    (malloc=94KB +94KB #24 +24)
+
+        -                    Symbol (reserved=1266KB +45KB, committed=1266KB +45KB)
+                                    (malloc=906KB +45KB #6997 +2217)
+                                    (arena=360KB #1)
+
+        -    Native Memory Tracking (reserved=496KB +147KB, committed=496KB +147KB)
+                                    (malloc=182KB +38KB #2564 +525)
+                                    (tracking overhead=315KB +109KB)
+
+        -        Shared class space (reserved=12288KB, committed=12004KB)
+                                    (mmap: reserved=12288KB, committed=12004KB)
+
+        -               Arena Chunk (reserved=10982KB +8599KB, committed=10982KB +8599KB)
+                                    (malloc=10982KB +8599KB)
+
+        -                   Logging (reserved=5KB, committed=5KB)
+                                    (malloc=5KB #209)
+
+        -                 Arguments (reserved=2KB, committed=2KB)
+                                    (malloc=2KB #59)
+
+        -                    Module (reserved=116KB, committed=116KB)
+                                    (malloc=116KB #978)
+
+        -                 Safepoint (reserved=8KB, committed=8KB)
+                                    (mmap: reserved=8KB, committed=8KB)
+
+        -           Synchronization (reserved=214KB +110KB, committed=214KB +110KB)
+                                    (malloc=214KB +110KB #3385 +1687)
+
+        -                 Metaspace (reserved=12KB +1KB, committed=12KB +1KB)
+                                    (malloc=12KB +1KB #16 +2)
+
+        -                   Unknown (reserved=8192KB, committed=1664KB +640KB)
+                                    (mmap: reserved=8192KB, committed=1664KB +640KB)
+
+
+
+        Summary (VM.native_memory)
+        -----------------------------
+           82888KB   +35755KB   Total
+            6144KB          0   Java Heap
+             405KB      +50KB   Class
+           41063KB   +25666KB   Thread
+            7784KB     +162KB   Code
+              85KB      +18KB   GC
+             346KB     +177KB   Compiler
+             197KB      +46KB   Internal
+              94KB      +94KB   Other
+            1266KB      +45KB   Symbol
+             496KB     +147KB   Native Memory
+           12004KB          0   Shared
+           10982KB    +8599KB   Arena Chunk
+                            0   Logging
+                            0   Arguments
+             116KB          0   Module
+                            0   Safepoint
+             214KB     +110KB   Synchronization
+              12KB       +1KB   Metaspace
+            1664KB     +640KB   Unknown

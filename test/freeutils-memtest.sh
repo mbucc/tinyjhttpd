@@ -23,17 +23,16 @@ max_rss=100
 # setup
 ./stop.sh > /dev/null
 sleep 0.5
-./test/memstart.sh 6 serial > ./test/jhttpd.out
+./test/start-freeutils.sh > ./test/jhttpd.out
 sleep 0.5
-N=$(jps | grep tinyjhttpd | awk '{print $1}')
+N=$(jps | grep httpserver | awk '{print $1}')
 jcmd $N VM.native_memory baseline > test/memtest.out
 
 # execute
 printf "\n\nab\n-----------------------------\n" >> test/memtest.out
-abn=50000
-abn=10000
+abn=10000  # It looks like jhttp does not support keep alive.
 echo "Submitting $abn requests to server ... "
-ab -k -n $abn -c 25 http://127.0.0.1:8000/hello >> test/memtest.out 2>&1
+  ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> test/memtest.out 2>&1
 
 # verify
 rss=$(ps x -orss= -p$N\
@@ -50,4 +49,4 @@ native=$(grep Total test/mem-stats.out\
 name="$name: ${min_rss}m < ${rss}m < ${max_rss}m? (VM.native=${native}m)"
 printf "%-75s" "$name"
 [ $rss -lt $max_rss ] && [ $rss -gt $min_rss ] && echo PASS || echo FAIL
-./stop.sh > /dev/null
+./test/stop-freeutils.sh > /dev/null
