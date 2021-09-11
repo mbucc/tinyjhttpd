@@ -33,6 +33,6 @@ sleep 0.5
 
 cat test/server.out test/curl.out | rmdates | rmports > $logfile
 
-printf "%-65s" "$name"
+printf "%-75s" "$name"
 diff -uw test/$fn.gold $logfile >&2 && echo PASS || echo FAIL
 

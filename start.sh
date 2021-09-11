@@ -8,4 +8,9 @@
 #	  -p   --module-path
 #	  -m   --module
 
-java -p mlib:lib -m com.markbucciarelli.tinyjhttpd $port &
+java \
+  -Xmx6m \
+  -Xms6m \
+  -XX:+UseSerialGC \
+  -p mlib:lib \
+  -m com.markbucciarelli.tinyjhttpd $port &

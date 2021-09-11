@@ -28,7 +28,7 @@ compile:
 test: jars testjars
 	@./test/runtest.sh 1 "server starts successfully" "/"
 	@./test/runtest.sh 2 "hello world handler works" "/hello"
-	@./test/runload.sh 3 "server resident set size (RSS) test" "/hello"
+	@./test/memtest.sh 3 "server resident set size (RSS) test" "/hello"
 
 fmt:
 	npx prettier --write "**/*.java"
