@@ -8,7 +8,7 @@ Tests run with:
 	ab -k -n 50000 -c 25
 	heap 6 m
 
-	Initial State: g1
+	Initial State: G1 garbage collector
 		 99 m	RSS
 		107 m	total VM.native_memory (+21m over startup)
 		 50 m	VM.gc
@@ -18,7 +18,7 @@ Tests run with:
 		  6 m	VM.heap
 		  3 m	VM.Arena
 
-	Try #1: serial
+	Try #1: Serial  garbage collector
 		 82 m	RSS (17 m less than G1)
 		 59 m	total VM.native_memory (+21m over startup)
 		  0.1 m	VM.gc
@@ -34,7 +34,7 @@ Tests run with:
 		 53 m	RSS (46 m less than G1)
 		 81 m	total VM.native_memory (+21m over startup)
 		  0.01 m	VM.gc
-		 41 m	VM.thread   <-- b/c no keep-alive I think.
+		 41 m	VM.thread   <-- b/c no keep-alive + ab (I think)
 		 12 m	VM.shared
 		  8 m	VM.code
 		  6 m	VM.heap
