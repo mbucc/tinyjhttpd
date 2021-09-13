@@ -31,7 +31,7 @@ jcmd $N VM.native_memory baseline > test/memtest.out
 # execute
 printf "\n\nab\n-----------------------------\n" >> test/memtest.out
 abn=50000
-abn=10000
+abn=50000
 echo "Submitting $abn requests to server ... "
 ab -k -n $abn -c 25 http://127.0.0.1:8000/hello >> test/memtest.out 2>&1
 

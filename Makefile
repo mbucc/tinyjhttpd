@@ -34,7 +34,7 @@ test: jars testjars
 	@./test/runtest.sh 1 "server starts successfully" "/"
 	@./test/runtest.sh 2 "hello world handler works" "/hello"
 	@./test/memtest.sh 3 "server resident set size (RSS) test"
-	@./test/freeutils-memtest.sh 4 "freeutils RSS test"
+	#@./test/freeutils-memtest.sh 4 "freeutils RSS test"
 
 fmt:
 	npx prettier --write "**/*.java"

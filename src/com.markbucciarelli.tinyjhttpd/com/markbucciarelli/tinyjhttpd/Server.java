@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ServiceLoader;
+import java.util.concurrent.Executors;
 
 /**
  * A Server is the main class.
@@ -67,7 +68,7 @@ public class Server {
         );
         server.createContext(o.getContext(), o);
       });
-    server.setExecutor(null);
+    server.setExecutor(Executors.newFixedThreadPool(10));
     server.start();
   }
 }
