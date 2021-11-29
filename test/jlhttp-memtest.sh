@@ -23,14 +23,14 @@ max_rss=100
 # setup
 ./stop.sh > /dev/null
 sleep 0.5
-./test/start-freeutils.sh > ./test/jhttpd.out
+./test/start-jlhttp.sh > ./test/jlhttp.out
 sleep 0.5
 N=$(jps | grep httpserver | awk '{print $1}')
 jcmd $N VM.native_memory baseline > test/memtest.out
 
 # execute
 printf "\n\nab\n-----------------------------\n" >> test/memtest.out
-abn=10000  # It looks like freeutils does not support keep alive, so 50,000 will run out of client sockets.
+abn=10000
 echo "Submitting $abn requests to server (no keep alive) ... "
   ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> test/memtest.out 2>&1
 
@@ -49,4 +49,4 @@ native=$(grep Total test/mem-stats.out\
 name="$name: ${min_rss}m < ${rss}m < ${max_rss}m? (VM.native=${native}m)"
 printf "%-75s" "$name"
 [ $rss -lt $max_rss ] && [ $rss -gt $min_rss ] && echo PASS || echo FAIL
-./test/stop-freeutils.sh > /dev/null
+./test/stop-jlhttp.sh > /dev/null
