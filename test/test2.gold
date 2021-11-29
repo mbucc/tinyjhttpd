@@ -1,5 +1,5 @@
 <Date.toString()> creating HttpServer on port 9876
-<Date.toString()> HttpServer created http 0.0.0.0/0.0.0.0:9876
+<Date.toString()> HttpServer created http localhost/127.0.0.1:9876
 <Date.toString()> registering route /hello to com.example.helloworld.HelloWorld
 <Date.toString()> context created: /hello
 <Date.toString()> Exchange request line: GET /hello HTTP/1.1

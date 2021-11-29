@@ -18,7 +18,7 @@
 n="$1"
 name="$2"
 min_rss=20
-max_rss=100
+max_rss=110
 
 # setup
 ./stop.sh > /dev/null

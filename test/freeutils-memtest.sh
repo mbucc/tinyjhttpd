@@ -30,7 +30,7 @@ jcmd $N VM.native_memory baseline > test/memtest.out
 
 # execute
 printf "\n\nab\n-----------------------------\n" >> test/memtest.out
-abn=10000  # It looks like jhttp does not support keep alive.
+abn=10000  # It looks like freeutils does not support keep alive, so 50,000 will run out of client sockets.
 echo "Submitting $abn requests to server ... "
   ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> test/memtest.out 2>&1
 

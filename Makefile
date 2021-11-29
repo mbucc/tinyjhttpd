@@ -30,11 +30,17 @@ testjars: compile
 compile:
 	javac -d ./classes --module-source-path src $$(find src -name '*.java')
 
-test: jars testjars
+testclasses: compile
+	javac  \
+		-cp "testlib/*:classes/com.markbucciarelli.tinyjhttpd" \
+		-d ./classes/ \
+		$$(find test/com.markbucciarelli.tinyjhttpd -name '*.java')
+
+test: jars testjars testclasses
 	@./test/runtest.sh 1 "server starts successfully" "/"
 	@./test/runtest.sh 2 "hello world handler works" "/hello"
 	@./test/memtest.sh 3 "server resident set size (RSS) test"
-	#@./test/freeutils-memtest.sh 4 "freeutils RSS test"
+	@./test/freeutils-memtest.sh 4 "freeutils RSS test"
 
 fmt:
 	npx prettier --write "**/*.java"

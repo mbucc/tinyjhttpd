@@ -13,4 +13,4 @@ java \
   -Xms6m \
   -XX:+UseSerialGC \
   -p mlib:lib \
-  -m com.markbucciarelli.tinyjhttpd $port &
+  -m com.markbucciarelli.tinyjhttpd -p $port &
