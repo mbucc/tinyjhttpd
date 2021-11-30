@@ -1,24 +1,21 @@
 August 10, 2021
 
-The server here runs in around 22MB of RAM, based on watching the
-output of free while I hit it with ab (Apache Benchmark utility).
-You can find more info on back-of-the-envelop benchmarking in the
-docs directory.
+Small server (21k jar size) that is happy with a 6M heap and stays under 100MB
+resident set size after handling 50,000 requests (at a rate of 13k req/sec)
+(for one toy hello world handler).
 
-The server hosting the tinyjhttpd daemon was Alpine
-(alpine-standard-3.14.1-x86_64) in a VirtualBox with 256MB of RAM.
+Uses Sun's original HTTP server (com.sun.net.httpserver.HttpServer) which
+made it into the official Java 9 module list and Oracle appears to be 
+maintaining.
 
-This server supports mustache templates and uses the web server
-that is built-in with Java.
+	To run tests		make test
+	To build    		make
 
-It uses Java 9 modules, including the automatic module naming feature
-that enables you to use libraries (in this case, jmustache), that
-are not packaged as a module.
+After building, the module is mlib.
 
-To build the jar, install OpenJDK 11 and type make in the project
-root.  It may work with Java 9, but I didn't try that.
+See the hello world module for an example for how to use the server.
 
-I used the following websites to figure out how to build this:
+References
 
   * A sample web server using the com.sun.net.httpserver package
   in the jdk.httpserver module:
@@ -29,6 +26,3 @@ I used the following websites to figure out how to build this:
 
   * How to use non-modular libraries (aka make an "automatic module"):
   https://www.logicbig.com/tutorials/core-java-tutorial/modules/automatic-modules.html
-
-
--- Mark
