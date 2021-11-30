@@ -4,7 +4,7 @@
 
 HEAP=$1
 GC=$2
-STACK=144k  # The Java virtual machine requires a thread stack of at least 144k.
+STACK=$3
 
 java \
   -Xmx${HEAP} \
