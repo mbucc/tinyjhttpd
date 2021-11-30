@@ -26,23 +26,23 @@ sleep 0.5
 ./test/start-jlhttp.sh > ./test/jlhttp.out
 sleep 0.5
 N=$(jps | grep httpserver | awk '{print $1}')
-jcmd $N VM.native_memory baseline > test/memtest.out
+jcmd $N VM.native_memory baseline > test/jlhttp-memtest.out
 
 # execute
-printf "\n\nab\n-----------------------------\n" >> test/memtest.out
+printf "\n\nab\n-----------------------------\n" >> test/jlhttp-memtest.out
 abn=10000
 echo "Submitting $abn requests to jlhttp (no keep alive) ... "
-  ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> test/memtest.out 2>&1
+  ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> test/jlhttp-memtest.out 2>&1
 
 # verify
 rss=$(ps x -orss= -p$N\
   |awk '$1 ~ /[0-9]m/ {printf "%.0f", $1;next} {printf "%.0f", $1/1024}')
 jcmd $N VM.native_memory summary.diff > test/native-memory.out
-printf "\n\nVM.native_memory\n-----------------------------\n" >> test/memtest.out
-cat test/native-memory.out >> test/memtest.out
-printf "\n\nSummary (VM.native_memory)\n-----------------------------\n" >> test/memtest.out
+printf "\n\nVM.native_memory\n-----------------------------\n" >> test/jlhttp-memtest.out
+cat test/native-memory.out >> test/jlhttp-memtest.out
+printf "\n\nSummary (VM.native_memory)\n-----------------------------\n" >> test/jlhttp-memtest.out
 awk -f test/mem-stats.awk < ./test/native-memory.out test/native-memory.out > test/mem-stats.out
-cat test/mem-stats.out >> test/memtest.out
+cat test/mem-stats.out >> test/jlhttp-memtest.out
 native=$(grep Total test/mem-stats.out\
   |awk '{x=$1; sub("FB","",x); printf "%.0f", x/1024;}')
 
