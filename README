@@ -12,9 +12,9 @@ it into the official Java 9 module list and Oracle appears to be maintaining.
 
 After building, the modules are in mlib.
 
-Note that the console logger is System.Logger implementation that logs to INFO
-and DEBUG to stdout and ERROR to stderr.  For more info on how Java sources use
-System.Logger, see docs/DIG-jdk-logging-levels.txt.
+Note that the console logger is System.Logger implementation that logs INFO and
+DEBUG log levels to stdout and ERROR to stderr.  For more info on how Java
+sources use System.Logger, see docs/DIG-jdk-logging-levels.txt.
 
 See the hello world module for an example for how to use the server.
 
