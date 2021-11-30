@@ -1,35 +1,29 @@
-August 10, 2021
-At startup, jmustache consumes no more RAM than minimal server.
-
-Both use 22MB of RAM.
+November 30, 2021
 
 
-jmustache running:
-    jdevgarden:~/jmustache$ ./start.sh 
-    jdevgarden:~/jmustache$ starting /myapp0 on port 8000
-    jdevgarden:~/jmustache$ free -m
-                  total        used        free      shared  buff/cache   available
-    Mem:            227          64         121           0          41         156
-    Swap:          3337           7        3330
-    jdevgarden:~/jmustache$ ./stop.sh 
-    killing 3124
+DIG-default-executor.md
+	Notes on the default thread executor (all tasks run in main server thread).
 
-minimal running:
-    jdevgarden:~/jmustache$ cd ../minimalserver/
-    jdevgarden:~/minimalserver$ ./start.sh 
-    jdevgarden:~/minimalserver$ starting /myapp0 on port 8000
-    
-    jdevgarden:~/minimalserver$ 
-    jdevgarden:~/minimalserver$ free -m
-                  total        used        free      shared  buff/cache   available
-    Mem:            227          65         120           0          41         154
-    Swap:          3337           7        3330
-    jdevgarden:~/minimalserver$ ./stop.sh 
-    killing 3149
+DIG-jdk-logging-levels.txt
+	Notes on how much core Java code uses SystemLogger (not much).
 
-nothing running:
-    jdevgarden:~/minimalserver$ free -m
-                  total        used        free      shared  buff/cache   available
-    Mem:            227          43         141           0          41         175
-    Swap:          3337           7        3330
-    jdevgarden:~/minimalserver$ 
+DIG-server-backlog-parameter.md
+	Notes on TCP socket backlog setting.
+
+DIG-server-configuration.md
+	Environmental variables that control Sun's HTTP server that comes with java.
+
+HOWTO-install-wrk-on-OSX.txt
+	Notes on using wrk loader (ended up sticking with ab).
+
+HOWTO-intellij-and-module-source-path.txt
+	How to configure IntelliJ to work with Java 9 modules.
+
+HOWTO-prettier-javafmt.txt
+	How to install prettier Java formatter.
+
+footprint-analysis-part1.txt
+footprint-analysis-part2.txt
+	Memory footprint notes.
+
+
