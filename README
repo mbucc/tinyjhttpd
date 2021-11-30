@@ -1,8 +1,8 @@
 August 10, 2021
 
-Small server (21k jar size) that is happy with a 6M heap and stays under 100MB
-resident set size after handling 50,000 requests (at a rate of 13k req/sec) (for
-one toy hello world handler).
+Small server (21k jar size) that is happy with a 3M heap and stays under 120MB
+resident set size when handling 50,000 requests for one toy hello world handler.
+See docs/memtest_UseSerialGC_3m.txt for ApacheBench and memory usage details.
 
 Uses Sun's original HTTP server (com.sun.net.httpserver.HttpServer) which made
 it into the official Java 9 module list and Oracle appears to be maintaining.
