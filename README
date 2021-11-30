@@ -1,19 +1,23 @@
 August 10, 2021
 
-Small server (21k jar size) that is happy with a 6M heap and stays
-under 100MB resident set size after handling 50,000 requests (at a
-rate of 13k req/sec) (for one toy hello world handler).
+Small server (21k jar size) that is happy with a 6M heap and stays under 100MB
+resident set size after handling 50,000 requests (at a rate of 13k req/sec) (for
+one toy hello world handler).
 
-Uses Sun's original HTTP server (com.sun.net.httpserver.HttpServer)
-which made it into the official Java 9 module list and Oracle appears
-to be maintaining.
+Uses Sun's original HTTP server (com.sun.net.httpserver.HttpServer) which made
+it into the official Java 9 module list and Oracle appears to be maintaining.
 
 	To run tests		make test
 	To build    		make
 
-After building, the module is mlib.
+After building, the modules are in mlib.
+
+Note that the console logger is System.Logger implementation that logs to INFO
+and DEBUG to stdout and ERROR to stderr.  For more info on how Java sources use
+System.Logger, see docs/DIG-jdk-logging-levels.txt.
 
 See the hello world module for an example for how to use the server.
+
 
 References
 
@@ -26,3 +30,5 @@ References
 
   * How to use non-modular libraries (aka make an "automatic module"):
   https://www.logicbig.com/tutorials/core-java-tutorial/modules/automatic-modules.html
+
+* Java stack vs. heap: https://www.journaldev.com/4098/java-heap-space-vs-stack-memory
