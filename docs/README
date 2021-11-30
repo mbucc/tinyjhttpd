@@ -8,10 +8,10 @@ DIG-jdk-logging-levels.txt
 	Notes on how much core Java code uses SystemLogger (not much).
 
 DIG-server-backlog-parameter.md
-	Notes on TCP socket backlog setting.
+	Notes on TCP socket backlog setting (max pending connections = 50).
 
 DIG-server-configuration.md
-	Environmental variables that control Sun's HTTP server that comes with java.
+	Environmental variables that control Sun's HTTP server that comes with Java.
 
 HOWTO-install-wrk-on-OSX.txt
 	Notes on using wrk loader (ended up sticking with ab).
