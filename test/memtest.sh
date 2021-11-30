@@ -18,32 +18,40 @@
 n="$1"
 name="$2"
 min_rss=20
-max_rss=110
+max_rss=120
+
+#GC=UseG1GC
+GC=UseSerialGC
+HEAP=6m
+LOGF=test/memtest_${GC}_${HEAP}.out
+
+echo "Run on $(date)" > $LOGF
 
 # setup
 ./stop.sh > /dev/null
 sleep 0.5
-./test/memstart.sh 6 serial > ./test/jhttpd.out
+./test/memstart.sh $HEAP $GC > ./test/memtest-start.out
 sleep 0.5
 N=$(jps | grep tinyjhttpd | awk '{print $1}')
-jcmd $N VM.native_memory baseline > test/memtest.out
+printf "\n\nRecord memory usage before applying load\n-----------------------------\n" >> $LOGF
+jcmd $N VM.native_memory baseline >> $LOGF
 
 # execute
-printf "\n\nab\n-----------------------------\n" >> test/memtest.out
+printf "\n\nab\n-----------------------------\n" >> $LOGF
 abn=50000
 abn=50000
 echo "Submitting $abn requests to tinyjhttpd ... "
-ab -k -n $abn -c 25 http://127.0.0.1:8000/hello >> test/memtest.out 2>&1
+ab -k -n $abn -c 25 http://127.0.0.1:8000/hello >> $LOGF 2>&1
 
 # verify
 rss=$(ps x -orss= -p$N\
   |awk '$1 ~ /[0-9]m/ {printf "%.0f", $1;next} {printf "%.0f", $1/1024}')
 jcmd $N VM.native_memory summary.diff > test/native-memory.out
-printf "\n\nVM.native_memory\n-----------------------------\n" >> test/memtest.out
-cat test/native-memory.out >> test/memtest.out
-printf "\n\nSummary (VM.native_memory)\n-----------------------------\n" >> test/memtest.out
+printf "\n\nMemory usage after applying load\n-----------------------------\n" >> $LOGF
+cat test/native-memory.out >> $LOGF
+printf "\n\nChange in memory usage\n-----------------------------\n" >> $LOGF
 awk -f test/mem-stats.awk < ./test/native-memory.out test/native-memory.out > test/mem-stats.out
-cat test/mem-stats.out >> test/memtest.out
+cat test/mem-stats.out >> $LOGF
 native=$(grep Total test/mem-stats.out\
   |awk '{x=$1; sub("FB","",x); printf "%.0f", x/1024;}')
 

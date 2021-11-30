@@ -3,13 +3,11 @@
 # September 7, 2021
 
 HEAP=$1
-[ "x$2" = "x" ] && GC=UseG1GC || GC=UseSerialGC
-
-echo "gc = $GC"
+GC=$2
 
 java \
-  -Xmx${HEAP}m \
-  -Xms${HEAP}m \
+  -Xmx${HEAP} \
+  -Xms${HEAP} \
   -XX:+${GC} \
   -XX:NativeMemoryTracking=detail \
   -p mlib:lib \

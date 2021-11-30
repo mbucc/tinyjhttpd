@@ -20,29 +20,36 @@ name="$2"
 min_rss=20
 max_rss=100
 
-# setup
+GC=UseSerialGC
+HEAP=6m
+
+LOGF=test/jlhttp-memtest_${GC}_${HEAP}.out
+echo "Run on $(date)" > $LOGF
+
+# start up
 ./stop.sh > /dev/null
 sleep 0.5
-./test/start-jlhttp.sh > ./test/jlhttp.out
+./test/start-jlhttp.sh $HEAP $GC > ./test/jlhttp-memtest-start.out
 sleep 0.5
 N=$(jps | grep httpserver | awk '{print $1}')
-jcmd $N VM.native_memory baseline > test/jlhttp-memtest.out
+printf "\n\nRecord memory usage before applying load\n-----------------------------\n" >> $LOGF
+jcmd $N VM.native_memory baseline >> $LOGF
 
-# execute
-printf "\n\nab\n-----------------------------\n" >> test/jlhttp-memtest.out
+# load server
+printf "\n\nab\n-----------------------------\n" >> $LOGF
 abn=10000
 echo "Submitting $abn requests to jlhttp (no keep alive) ... "
-  ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> test/jlhttp-memtest.out 2>&1
+ab -k -n $abn -c 25 http://127.0.0.1:8000/hello.txt >> $LOGF 2>&1
 
-# verify
+# collect memory stats
 rss=$(ps x -orss= -p$N\
   |awk '$1 ~ /[0-9]m/ {printf "%.0f", $1;next} {printf "%.0f", $1/1024}')
 jcmd $N VM.native_memory summary.diff > test/native-memory.out
-printf "\n\nVM.native_memory\n-----------------------------\n" >> test/jlhttp-memtest.out
-cat test/native-memory.out >> test/jlhttp-memtest.out
-printf "\n\nSummary (VM.native_memory)\n-----------------------------\n" >> test/jlhttp-memtest.out
+printf "\n\nMemory usage after applying load\n-----------------------------\n" >> $LOGF
+cat test/native-memory.out >> $LOGF
+printf "\n\nChange in memory usage\n-----------------------------\n" >> $LOGF
 awk -f test/mem-stats.awk < ./test/native-memory.out test/native-memory.out > test/mem-stats.out
-cat test/mem-stats.out >> test/jlhttp-memtest.out
+cat test/mem-stats.out >> $LOGF
 native=$(grep Total test/mem-stats.out\
   |awk '{x=$1; sub("FB","",x); printf "%.0f", x/1024;}')
 
