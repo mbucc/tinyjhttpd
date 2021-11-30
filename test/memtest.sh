@@ -22,7 +22,7 @@ max_rss=120
 
 #GC=UseG1GC
 GC=UseSerialGC
-HEAP=6m
+HEAP=3m
 LOGF=test/memtest_${GC}_${HEAP}.out
 
 echo "Run on $(date)" > $LOGF
@@ -30,7 +30,7 @@ echo "Run on $(date)" > $LOGF
 # setup
 ./stop.sh > /dev/null
 sleep 0.5
-./test/memstart.sh $HEAP $GC > ./test/memtest-start.out
+./test/memstart.sh $HEAP $GC > ./test/memtest-start.out 2>&1
 sleep 0.5
 N=$(jps | grep tinyjhttpd | awk '{print $1}')
 printf "\n\nRecord memory usage before applying load\n-----------------------------\n" >> $LOGF
@@ -41,7 +41,7 @@ printf "\n\nab\n-----------------------------\n" >> $LOGF
 abn=50000
 abn=50000
 echo "Submitting $abn requests to tinyjhttpd ... "
-ab -k -n $abn -c 25 http://127.0.0.1:8000/hello >> $LOGF 2>&1
+ab -s 5 -k -n $abn -c 25 http://127.0.0.1:8000/hello >> $LOGF 2>&1
 
 # verify
 rss=$(ps x -orss= -p$N\
