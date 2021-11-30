@@ -1,4 +1,4 @@
-Tue Nov 30 06:30:55 EST 2021
+Tue Nov 30 06:46:39 EST 2021
 Output of ./test/memtest.sh
 
 openjdk version "16.0.2" 2021-07-20
@@ -11,7 +11,7 @@ UseSerialGC garbage collector
 
 Record memory usage before applying load
 -----------------------------
-16278:
+16555:
 Baseline succeeded
 
 
@@ -43,23 +43,23 @@ Document Path:          /hello
 Document Length:        11 bytes
 
 Concurrency Level:      25
-Time taken for tests:   4.217 seconds
+Time taken for tests:   4.253 seconds
 Complete requests:      50000
 Failed requests:        0
 Keep-Alive requests:    50000
 Total transferred:      10950000 bytes
 HTML transferred:       550000 bytes
-Requests per second:    11857.65 [#/sec] (mean)
-Time per request:       2.108 [ms] (mean)
-Time per request:       0.084 [ms] (mean, across all concurrent requests)
-Transfer rate:          2535.96 [Kbytes/sec] received
+Requests per second:    11755.95 [#/sec] (mean)
+Time per request:       2.127 [ms] (mean)
+Time per request:       0.085 [ms] (mean, across all concurrent requests)
+Transfer rate:          2514.21 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       1
-Processing:     0    2   1.6      2      63
-Waiting:        0    2   1.6      2      62
-Total:          0    2   1.6      2      64
+Processing:     0    2   1.6      2      70
+Waiting:        0    2   1.6      2      69
+Total:          0    2   1.6      2      70
 
 Percentage of the requests served within a certain time (ms)
   50%      2
@@ -68,31 +68,31 @@ Percentage of the requests served within a certain time (ms)
   80%      2
   90%      3
   95%      4
-  98%      9
-  99%     11
- 100%     64 (longest request)
+  98%      8
+  99%     10
+ 100%     70 (longest request)
 
 
 Memory usage after applying load
 -----------------------------
-16278:
+16555:
 
 Native Memory Tracking:
 
-Total: reserved=1332581KB +1044KB, committed=39041KB +2968KB
+Total: reserved=1332582KB +1044KB, committed=39366KB +3292KB
 
 -                 Java Heap (reserved=4096KB, committed=4096KB)
                             (mmap: reserved=4096KB, committed=4096KB)
  
--                     Class (reserved=1048852KB +96KB, committed=596KB +224KB)
+-                     Class (reserved=1048857KB +101KB, committed=601KB +229KB)
                             (classes #1590 +248)
                             (  instance classes #1396 +208, array classes #194 +40)
-                            (malloc=276KB +96KB #4054 +2005)
+                            (malloc=281KB +101KB #4160 +2113)
                             (mmap: reserved=1048576KB, committed=320KB +128KB)
                             (  Metadata:   )
-                            (    reserved=8192KB, committed=2816KB +1280KB)
-                            (    used=2746KB +1315KB)
-                            (    free=70KB -35KB)
+                            (    reserved=8192KB, committed=2880KB +1344KB)
+                            (    used=2762KB +1333KB)
+                            (    free=118KB +11KB)
                             (    waste=0KB =0.00%)
                             (  Class space:)
                             (    reserved=1048576KB, committed=320KB +128KB)
@@ -106,38 +106,38 @@ Total: reserved=1332581KB +1044KB, committed=39041KB +2968KB
                             (malloc=39KB +15KB #158 +60)
                             (arena=29KB +12 #50 +20)
  
--                      Code (reserved=248116KB +345KB, committed=8492KB +861KB)
-                            (malloc=428KB +345KB #2359 +1498)
-                            (mmap: reserved=247688KB, committed=8064KB +516KB)
+-                      Code (reserved=248156KB +385KB, committed=8792KB +1161KB)
+                            (malloc=468KB +385KB #2443 +1583)
+                            (mmap: reserved=247688KB, committed=8324KB +776KB)
  
--                        GC (reserved=118KB +42KB, committed=118KB +42KB)
-                            (malloc=98KB +42KB #225 +44)
+-                        GC (reserved=118KB +43KB, committed=118KB +43KB)
+                            (malloc=98KB +43KB #226 +45)
                             (mmap: reserved=20KB, committed=20KB)
  
--                  Compiler (reserved=334KB +165KB, committed=334KB +165KB)
-                            (malloc=169KB +165KB #181 +131)
+-                  Compiler (reserved=335KB +167KB, committed=335KB +167KB)
+                            (malloc=171KB +167KB #191 +142)
                             (arena=165KB #5)
  
--                  Internal (reserved=183KB +31KB, committed=183KB +31KB)
-                            (malloc=151KB +31KB #733 +97)
+-                  Internal (reserved=184KB +32KB, committed=184KB +32KB)
+                            (malloc=152KB +32KB #739 +103)
                             (mmap: reserved=32KB, committed=32KB)
  
 -                     Other (reserved=88KB +80KB, committed=88KB +80KB)
                             (malloc=88KB +80KB #11 +10)
  
--                    Symbol (reserved=1385KB +90KB, committed=1385KB +90KB)
-                            (malloc=1025KB +90KB #13690 +5323)
+-                    Symbol (reserved=1386KB +90KB, committed=1386KB +90KB)
+                            (malloc=1026KB +90KB #13741 +5374)
                             (arena=360KB #1)
  
--    Native Memory Tracking (reserved=677KB +257KB, committed=677KB +257KB)
-                            (malloc=204KB +59KB #2884 +826)
-                            (tracking overhead=474KB +199KB)
+-    Native Memory Tracking (reserved=686KB +266KB, committed=686KB +266KB)
+                            (malloc=207KB +61KB #2926 +862)
+                            (tracking overhead=480KB +205KB)
  
 -        Shared class space (reserved=12288KB, committed=12004KB)
                             (mmap: reserved=12288KB, committed=12004KB)
  
--               Arena Chunk (reserved=484KB -1705KB, committed=484KB -1705KB)
-                            (malloc=484KB -1705KB)
+-               Arena Chunk (reserved=421KB -1769KB, committed=421KB -1769KB)
+                            (malloc=421KB -1769KB)
  
 -                   Logging (reserved=5KB, committed=5KB)
                             (malloc=5KB #209)
@@ -151,42 +151,42 @@ Total: reserved=1332581KB +1044KB, committed=39041KB +2968KB
 -                 Safepoint (reserved=8KB, committed=8KB)
                             (mmap: reserved=8KB, committed=8KB)
  
--           Synchronization (reserved=291KB +175KB, committed=291KB +175KB)
-                            (malloc=291KB +175KB #4630 +2752)
+-           Synchronization (reserved=296KB +181KB, committed=296KB +181KB)
+                            (malloc=296KB +181KB #4714 +2840)
  
 -                 Metaspace (reserved=13KB +1KB, committed=13KB +1KB)
                             (malloc=13KB +1KB #20 +3)
  
--                   Unknown (reserved=8192KB, committed=2816KB +1280KB)
-                            (mmap: reserved=8192KB, committed=2816KB +1280KB)
+-                   Unknown (reserved=8192KB, committed=2880KB +1344KB)
+                            (mmap: reserved=8192KB, committed=2880KB +1344KB)
  
 
 
 Change in memory usage
 -----------------------------
-   39041KB    +2968KB   Total
+   39366KB    +3292KB   Total
     4096KB          0   Java Heap
-     596KB     +224KB   Class
+     601KB     +229KB   Class
     7331KB    +1467KB   Thread
-    8492KB     +861KB   Code
-     118KB      +42KB   GC
-     334KB     +165KB   Compiler
-     183KB      +31KB   Internal
+    8792KB    +1161KB   Code
+     118KB      +43KB   GC
+     335KB     +167KB   Compiler
+     184KB      +32KB   Internal
       88KB      +80KB   Other
-    1385KB      +90KB   Symbol
-     677KB     +257KB   Native Memory
+    1386KB      +90KB   Symbol
+     686KB     +266KB   Native Memory
    12004KB          0   Shared
-     484KB    -1705KB   Arena Chunk
+     421KB    -1769KB   Arena Chunk
                     0   Logging
                     0   Arguments
      118KB          0   Module
                     0   Safepoint
-     291KB     +175KB   Synchronization
+     296KB     +181KB   Synchronization
       13KB       +1KB   Metaspace
-    2816KB    +1280KB   Unknown
+    2880KB    +1344KB   Unknown
 
 
 Memory Usage Summary
 -----------------------------
-80MB Darwin 19.6.0 resident set size
-38MB Total Java native memory
+91MB Darwin 19.6.0 resident set size
+42MB Total Java native memory

@@ -58,11 +58,15 @@ rss=$(ps x -orss= -p$N\
 jcmd $N VM.native_memory summary.diff > test/native-memory.out
 printf "\n\nMemory usage after applying load\n-----------------------------\n" >> $LOGF
 cat test/native-memory.out >> $LOGF
+
 printf "\n\nChange in memory usage\n-----------------------------\n" >> $LOGF
 awk -f test/mem-stats.awk < ./test/native-memory.out test/native-memory.out > test/mem-stats.out
 cat test/mem-stats.out >> $LOGF
+
 native=$(grep Total test/mem-stats.out\
-  |awk '{x=$1; sub("FB","",x); printf "%.0f", x/1024;}')
+  |tr -d 'KB+'\
+  |awk '{printf "%.0f", ($1+$2)/1024;}')
+
 printf "\n\nMemory Usage Summary\n-----------------------------\n" >> $LOGF
 printf "${rss}MB $(uname) $(uname -r) resident set size\n"  >> $LOGF
 printf "${native}MB Total Java native memory\n"  >> $LOGF

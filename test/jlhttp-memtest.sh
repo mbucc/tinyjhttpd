@@ -51,7 +51,8 @@ printf "\n\nChange in memory usage\n-----------------------------\n" >> $LOGF
 awk -f test/mem-stats.awk < ./test/native-memory.out test/native-memory.out > test/mem-stats.out
 cat test/mem-stats.out >> $LOGF
 native=$(grep Total test/mem-stats.out\
-  |awk '{x=$1; sub("FB","",x); printf "%.0f", x/1024;}')
+  |tr -d 'KB+'\
+  |awk '{printf "%.0f", ($1+$2)/1024;}')
 
 name="$name: ${min_rss}m < ${rss}m < ${max_rss}m? (VM.native=${native}m)"
 printf "%-75s" "$name"
