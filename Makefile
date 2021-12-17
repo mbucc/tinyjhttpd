@@ -13,7 +13,13 @@ jars: compile
 		.
 
 tinyjhttpd: compile
-	native-image -cp "mlib/*" --install-exit-handlers com.markbucciarelli.tinyjhttpd.Server tinyjhttpd
+	native-image \
+	-cp "mlib/*" \
+	--native-image-info \
+	--verbose \
+	--install-exit-handlers \
+	com.markbucciarelli.tinyjhttpd.Server \
+	tinyjhttpd
 
 testjars: compile
 	mkdir -p mlib

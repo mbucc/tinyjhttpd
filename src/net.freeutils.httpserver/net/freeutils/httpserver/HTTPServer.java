@@ -514,9 +514,7 @@ public class HTTPServer {
      */
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-      if (
-        len > 0
-      ) initChunk(len); // zero-sized chunk is the trailing chunk
+      if (len > 0) initChunk(len); // zero-sized chunk is the trailing chunk
       out.write(b, off, len);
     }
 
@@ -657,9 +655,7 @@ public class HTTPServer {
      */
     protected boolean fill() throws IOException {
       // check if we already have more available data
-      if (
-        head != tail
-      ) return true; // remember that if we continue, head == tail below
+      if (head != tail) return true; // remember that if we continue, head == tail below
       // if there's no more room, shift extra unread data to beginning of buffer
       if (tail > buf.length - 256) { // max boundary + whitespace supported size
         System.arraycopy(buf, tail, buf, 0, end -= tail);
@@ -676,24 +672,18 @@ public class HTTPServer {
         // continue reading to determine if there is more data or not
       } while (read > 0 && tail == head && len == 0);
       // update and validate state
-      if (
-        tail != 0
-      ) state |= 1; // anything but a boundary right at the beginning // started data (preamble or after boundary)
+      if (tail != 0) state |= 1; // anything but a boundary right at the beginning // started data (preamble or after boundary)
       if (state < 8 && len > 0) state |= 2; // found start boundary
       if (
-        (state & 6) ==
-        4 || // EOS but no start boundary found
+        (state & 6) == 4 || // EOS but no start boundary found
         len == 0 &&
         (
-          (state & 0xFC) ==
-          4 || // EOS but no last and no more boundaries
+          (state & 0xFC) == 4 || // EOS but no last and no more boundaries
           read == 0 &&
           tail == head
         )
       ) throw new IOException("missing boundary"); // boundary longer than buffer
-      if (
-        state >= 0x10
-      ) tail = end; // in epilogue // ignore boundaries, return everything
+      if (state >= 0x10) tail = end; // in epilogue // ignore boundaries, return everything
       return tail > head; // available data in current part
     }
 
@@ -714,9 +704,7 @@ public class HTTPServer {
           j < end && j - off < boundary.length && buf[j] == boundary[j - off]
         ) j++;
         // return potential partial boundary which is cut off at end of current data
-        if (
-          j + 1 >= end
-        ) return; // at least two more chars needed for full boundary (CRLF or --)
+        if (j + 1 >= end) return; // at least two more chars needed for full boundary (CRLF or --)
         // if we found the boundary value, expand selection to include full line
         if (j - off == boundary.length) {
           // check if last boundary of entire multipart
@@ -727,9 +715,8 @@ public class HTTPServer {
           // allow linear whitespace after boundary
           while (j < end && (buf[j] == ' ' || buf[j] == '\t')) j++;
           // check for CRLF (required, except in last boundary with no epilogue)
-          if (
-            j + 1 < end && buf[j] == '\r' && buf[j + 1] == '\n'
-          ) len = j - tail + 2; // found CRLF // including optional whitespace and CRLF
+          if (j + 1 < end && buf[j] == '\r' && buf[j + 1] == '\n') len =
+            j - tail + 2; // found CRLF // including optional whitespace and CRLF
           else if (
             j + 1 < end || (state & 4) != 0 && j + 1 == end
           ) throw new IOException("boundary must end with CRLF"); else if ( // should have found or never will
@@ -1224,9 +1211,9 @@ public class HTTPServer {
       this.name = name.trim();
       this.value = value.trim();
       // RFC2616#14.23 - header can have an empty value (e.g. Host)
-      if (
-        this.name.length() == 0
-      ) throw new IllegalArgumentException("name cannot be empty"); // but name cannot be empty
+      if (this.name.length() == 0) throw new IllegalArgumentException(
+        "name cannot be empty"
+      ); // but name cannot be empty
     }
 
     /**
@@ -1571,9 +1558,7 @@ public class HTTPServer {
       String host = uri.getHost();
       if (host == null) {
         host = headers.get("Host");
-        if (
-          host == null
-        ) host = detectLocalHostName(); // missing in HTTP/1.0
+        if (host == null) host = detectLocalHostName(); // missing in HTTP/1.0
       }
       int pos = host.indexOf(':');
       host = pos < 0 ? host : host.substring(0, pos);
@@ -1926,12 +1911,8 @@ public class HTTPServer {
           headers.add("Content-Length", Long.toString(length)); // known length
         }
       }
-      if (
-        !headers.contains("Vary")
-      ) headers.add("Vary", "Accept-Encoding"); // RFC7231#7.1.4: Vary field should include headers // that are used in selecting representation
-      if (
-        lastModified > 0 && !headers.contains("Last-Modified")
-      ) headers.add( // RFC2616#14.29
+      if (!headers.contains("Vary")) headers.add("Vary", "Accept-Encoding"); // RFC7231#7.1.4: Vary field should include headers // that are used in selecting representation
+      if (lastModified > 0 && !headers.contains("Last-Modified")) headers.add( // RFC2616#14.29
         "Last-Modified",
         formatDate(Math.min(lastModified, System.currentTimeMillis()))
       );
@@ -2234,13 +2215,10 @@ public class HTTPServer {
    */
   public synchronized void start() throws IOException {
     if (serv != null) return;
-    if (
-      serverSocketFactory == null
-    ) serverSocketFactory = ServerSocketFactory.getDefault(); // assign default server socket factory if needed // plain sockets
+    if (serverSocketFactory == null) serverSocketFactory =
+      ServerSocketFactory.getDefault(); // assign default server socket factory if needed // plain sockets
     serv = createServerSocket();
-    if (
-      executor == null
-    ) executor = Executors.newCachedThreadPool(); // assign default executor if needed // consumes no resources when idle
+    if (executor == null) executor = Executors.newCachedThreadPool(); // assign default executor if needed // consumes no resources when idle
     // register all host aliases (which may have been modified)
     for (VirtualHost host : getVirtualHosts()) for (String alias : host.getAliases()) hosts.put(
       alias,
@@ -2296,9 +2274,7 @@ public class HTTPServer {
             t.getMessage().contains("missing request line")
           ) break; // we're not in the middle of a transaction - so just disconnect
           resp.getHeaders().add("Connection", "close"); // about to close connection
-          if (
-            t instanceof InterruptedIOException
-          ) resp.sendError( // e.g. SocketTimeoutException
+          if (t instanceof InterruptedIOException) resp.sendError( // e.g. SocketTimeoutException
             408,
             "Timeout waiting for client request"
           ); else resp.sendError(400, "Invalid request: " + t.getMessage());
@@ -2655,9 +2631,7 @@ public class HTTPServer {
         if (start < min) min = start;
         if (end > max) max = end;
       }
-      if (
-        max < 0
-      ) throw new RuntimeException(); // no tokens
+      if (max < 0) throw new RuntimeException(); // no tokens
       if (max >= length && min < length) max = length - 1;
       return new long[] { min, max }; // start might be >= length!
     } catch (RuntimeException re) { // NFE, IOOBE or explicit RE
@@ -3066,9 +3040,7 @@ public class HTTPServer {
         start < line.length() && Character.isWhitespace(line.charAt(start));
         start++
       );
-      if (
-        start > 0
-      ) line = prevLine + ' ' + line.substring(start); // unfold header continuation line
+      if (start > 0) line = prevLine + ' ' + line.substring(start); // unfold header continuation line
       int separator = line.indexOf(':');
       if (separator < 0) throw new IOException(
         "invalid header: \"" + line + "\""
@@ -3143,9 +3115,7 @@ public class HTTPServer {
     // If-None-Match
     header = headers.get("If-None-Match");
     if (header != null) {
-      if (
-        match(false, splitElements(header, false), etag)
-      ) status = // RFC7232#3.2: use weak matching
+      if (match(false, splitElements(header, false), etag)) status = // RFC7232#3.2: use weak matching
         req.getMethod().equals("GET") || req.getMethod().equals("HEAD")
           ? 304
           : 412; else force = true;
@@ -3302,9 +3272,7 @@ public class HTTPServer {
       path,
       ""
     );
-    if (
-      path.length() > 1
-    ) f.format( // add parent link if not root path
+    if (path.length() > 1) f.format( // add parent link if not root path
       " <a href=\"%s/\">Parent Directory</a>%" + (w + 5) + "s-%n",
       getParentPath(path),
       ""

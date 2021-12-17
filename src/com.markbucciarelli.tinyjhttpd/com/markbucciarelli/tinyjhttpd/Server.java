@@ -85,19 +85,21 @@ public class Server {
       new InetSocketAddress(xs.host, xs.port),
       xs.backlog
     );
-    ServiceLoader
-      .load(HTTPHandlerWithContext.class)
-      .stream()
-      .map(ServiceLoader.Provider::get)
-      .forEach(o -> {
-        LOGGER.log(
-          INFO,
-          "registering route {0} to {1}",
-          o.getContext(),
-          o.getClass().getName()
-        );
-        server.createContext(o.getContext(), o);
-      });
+    int servicesFound = 0;
+    var handlers = ServiceLoader.load(HTTPHandlerWithContext.class);
+    for (HTTPHandlerWithContext handler : handlers) {
+      servicesFound++;
+      LOGGER.log(
+        INFO,
+        "registering route {0} to {1}",
+        handler.getContext(),
+        handler.getClass().getName()
+      );
+      server.createContext(handler.getContext(), handler);
+    }
+    if (servicesFound == 0) {
+      throw new IllegalStateException("no handlers found");
+    }
     server.setExecutor(Executors.newFixedThreadPool(xs.threads));
     server.start();
   }
