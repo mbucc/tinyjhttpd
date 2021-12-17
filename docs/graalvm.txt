@@ -1,0 +1,198 @@
+December 17, 2021
+
+When I ran my memory test with default graalvm, I got much larger RSS:
+
+    Submitting 50000 requests to tinyjhttpd ... 
+    server resident set size (RSS) test: 20m < 323m < 120m?                    FAIL
+
+This is a good ticket on the graalvm memory knobs:
+    https://github.com/oracle/graal/issues/2224
+
+
+Native Image
+
+Install
+	export PATH="$JAVA_HOME/bin:$PATH"
+	gu install native-image
+
+Make sure you have xcode
+	xcode-select --install
+
+	(If already installed, this command will tell you.)
+
+Notes from readin https://www.graalvm.org/reference-manual/native-image/
+
+	Java 9 modules supported: https://medium.com/graalvm/graalvm-19-3-0-dfdb6f4ec8ed
+
+	The --install-exit-handlers option gives you the same signal handlers that a JVM does.
+
+	Security Manager 
+	The Java security manager is no longer recommended as a way to isolate less
+	trusted code from more trusted code in the same process. This is because almost
+	all typical hardware architectures are susceptible to side-channel attacks to
+	access data that is restricted via the security manager. Using separate processes
+	is now recommended for these cases.
+
+
+
+	A native image, when being executed, does not run on the Java HotSpot VM but on
+	the runtime system provided with GraalVM. That runtime includes all necessary
+	components, and one of them is the memory management.
+
+	The Serial GC is the default GC in both GraalVM Community and Enterprise Edition.
+	It is optimized for low memory footprint and small Java heap sizes.
+
+	By default, Native Image automatically determines values for the Java heap
+	settings that are listed below. The exact values may depend on the system
+	configuration and the used GC.
+
+	The maximum Java heap size defines the upper limit for the size of the whole Java
+	heap. If the Java heap is full and the GC is unable reclaim sufficient memory for
+	a Java object allocation, the allocation will fail with the OutOfMemoryError.
+	Note: The maximum heap size is only the upper limit for the Java heap and not
+	necessarily the upper limit for the total amount of consumed memory, as Native
+	Image places some data such as thread stacks, just-in-time compiled code, and
+	internal data structures in memory that is separate from the Java heap.
+
+	The minimum Java heap size defines how much memory the GC may always assume as
+	reserved for the Java heap, no matter how little of that memory is actually used.
+
+	The young generation size determines the amount of Java memory that can be
+	allocated without triggering a garbage collection.
+
+
+
+	Serial GC
+
+	The young generation contains recently created objects and is divided into the
+	eden and survivor regions.
+
+	If no maximum Java heap size is specified, a native image that uses the Serial GC
+	will set its maximum Java heap size to 80% of the physical memory size.
+
+	to explicitly set the heap size at run time, the following command-line options
+	can be used:
+
+	-Xmx - maximum heap size in bytes -Xms - minimum heap size in bytes -Xmn - the
+	size of the young generation in bytes
+
+
+
+	GraalVM Enterprise Edition supports compressed references to Java objects that use
+	32-bit instead of 64-bit. Compressed references are enabled by default and can
+	have a large impact on the memory footprint.
+
+
+
+
+
+mark@Marks-MBP tmp % native-image -h
+Error: Please specify class containing the main entry point method. (see --help)
+mark@Marks-MBP tmp % native-image --help
+
+GraalVM native-image building tool
+
+This tool can be used to generate an image that contains ahead-of-time compiled Java code.
+
+Usage: native-image [options] class [imagename] [options]
+           (to build an image for a class)
+   or  native-image [options] -jar jarfile [imagename] [options]
+           (to build an image for a jar file)
+
+where options include:
+
+    @argument files       one or more argument files containing options
+    -cp <class search path of directories and zip/jar files>
+    -classpath <class search path of directories and zip/jar files>
+    --class-path <class search path of directories and zip/jar files>
+                          A : separated list of directories, JAR archives,
+                          and ZIP archives to search for class files.
+    -D<name>=<value>      set a system property
+    -J<flag>              pass <flag> directly to the JVM running the image generator
+    -O<level>             0 - no optimizations, 1 - basic optimizations (default).
+    --verbose             enable verbose output
+    --version             print product version and exit
+    --help                print this help message
+    --help-extra          print help on non-standard options
+
+    --allow-incomplete-classpath
+                          allow image building with an incomplete class path: report type
+                          resolution errors at run time when they are accessed the first
+                          time, instead of during image building
+    --auto-fallback       build stand-alone image if possible
+    --configure-reflection-metadata
+                          limit method reflection metadata to configuration entries instead
+                          of including it for all reachable methods
+    --enable-all-security-services
+                          add all security service classes to the generated image.
+    --enable-http         enable http support in the generated image
+    --enable-https        enable https support in the generated image
+    --enable-url-protocols
+                          list of comma separated URL protocols to enable.
+    --features            a comma-separated list of fully qualified Feature implementation
+                          classes
+    --force-fallback      force building of fallback image
+    --gc=<value>          select native-image garbage collector implementation. Allowed
+                          options for <value>:
+                          'epsilon': Epsilon garbage collector
+                          'serial': Serial garbage collector (default)
+    --initialize-at-build-time
+                          a comma-separated list of packages and classes (and implicitly all
+                          of their superclasses) that are initialized during image
+                          generation. An empty string designates all packages.
+    --initialize-at-run-time
+                          a comma-separated list of packages and classes (and implicitly all
+                          of their subclasses) that must be initialized at runtime and not
+                          during image building. An empty string is currently not
+                          supported.
+    --install-exit-handlers
+                          provide java.lang.Terminator exit handlers for executable images
+    --libc                selects the libc implementation to use. Available implementations:
+                          glibc, musl, bionic
+    --native-compiler-options
+                          provide custom C compiler option used for query code compilation.
+    --native-compiler-path
+                          provide custom path to C compiler used for query code compilation
+                          and linking.
+    --native-image-info   show native-toolchain information and image-build settings
+    --no-fallback         build stand-alone image or report failure
+    --report-unsupported-elements-at-runtime
+                          report usage of unsupported methods and fields at run time when
+                          they are accessed the first time, instead of as an error during
+                          image building
+    --shared              build shared library
+    --static              build statically linked executable (requires static libc and zlib)
+    --target              selects native-image compilation target (in <OS>-<architecture>
+                          format). Defaults to host's OS-architecture pair.
+    --trace-class-initialization
+                          comma-separated list of fully-qualified class names that class
+                          initialization is traced for.
+    --trace-object-instantiation
+                          comma-separated list of fully-qualified class names that object
+                          instantiation is traced for.
+    -da                   also -da[:[packagename]...|:classname] or
+                          -disableassertions[:[packagename]...|:classname]. Disable
+                          assertions with specified granularity.
+    -dsa                  also -disablesystemassertions. Disables assertions in all system
+                          classes.
+    -ea                   also -ea[:[packagename]...|:classname] or
+                          -enableassertions[:[packagename]...|:classname]. Enable
+                          assertions with specified granularity.
+    -esa                  also -enablesystemassertions. Enables assertions in all system
+                          classes.
+    -g                    generate debugging information
+
+Available macro-options are:
+    --language:nfi
+    --language:js
+    --language:regex
+    --language:llvm
+    --tool:coverage
+    --tool:insight
+    --tool:dap
+    --tool:chromeinspector
+    --tool:insightheap
+    --tool:lsp
+    --tool:profiler
+
+

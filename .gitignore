@@ -6,3 +6,5 @@ classes
 
 *.out
 *.log
+tinyjhttpd
+tinyjhttpd.build_artifacts.txt

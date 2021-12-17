@@ -12,6 +12,9 @@ jars: compile
 		-C ./classes/com.markbucciarelli.consolelogger/ \
 		.
 
+tinyjhttpd: compile
+	native-image -cp "mlib/*" --install-exit-handlers com.markbucciarelli.tinyjhttpd.Server tinyjhttpd
+
 testjars: compile
 	mkdir -p mlib
 	jar --create \
@@ -40,7 +43,7 @@ test: jars testjars testclasses
 	@./test/runtest.sh 1 "server starts successfully" "/"
 	@./test/runtest.sh 2 "hello world handler works" "/hello"
 	@./test/memtest.sh 3 "server resident set size (RSS) test"
-	@./test/jlhttp-memtest.sh 4 "jlhttp RSS test"
+	@./test/memtest-jlhttp.sh 4 "jlhttp RSS test"
 
 fmt:
 	npx prettier --write "**/*.java"

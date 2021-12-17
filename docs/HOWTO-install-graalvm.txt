@@ -1,0 +1,28 @@
+December 17, 2021
+
+Copy of steps from https://www.graalvm.org/docs/getting-started/macos/.
+
+Get Java17 community version.
+	JV=17
+	V=21.3.0
+	F=graalvm-ce-java$JV-darwin-amd64-$V.tar.gz
+	curl -L https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$V/$F > $F
+
+Explode tarball
+	mkdir tmp
+	cd tmp
+	tar xzvf ../$F
+
+Copy to system directory.
+	sudo mv graalvm-ce-java$JV-$V /Library/Java/JavaVirtualMachines
+
+Test
+	/Library/Java/JavaVirtualMachines/graalvm-ce-java$JV-$V/Contents/Home/bin/java -version 
+
+Add to PATH and set JAVA_HOME
+	 export PATH=/Library/Java/JavaVirtualMachines/graalvm-ce-java$JV-$V/Contents/Home/bin:$PATH
+	 export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java$JV-$V/Contents/Home
+
+Or use /usr/libexec/java_home -v17.
+Note that this may not point to the GraalVM version depending on
+what other JDK 17 versions you have installed.

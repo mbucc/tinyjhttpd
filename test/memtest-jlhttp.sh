@@ -23,13 +23,13 @@ max_rss=100
 GC=UseSerialGC
 HEAP=6m
 
-LOGF=test/jlhttp-memtest_${GC}_${HEAP}.out
+LOGF=test/memtest-jlhttp_${GC}_${HEAP}.out
 echo "Run on $(date)" > $LOGF
 
 # start up
 ./stop.sh > /dev/null
 sleep 0.5
-./test/start-jlhttp.sh $HEAP $GC > ./test/jlhttp-memtest-start.out
+./test/start-jlhttp.sh $HEAP $GC > ./test/memtest-jlhttp-start.out
 sleep 0.5
 N=$(jps | grep httpserver | awk '{print $1}')
 printf "\n\nRecord memory usage before applying load\n-----------------------------\n" >> $LOGF
